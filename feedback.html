@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Send feedback to the OneVictoria Resident Hub — suggestions, bugs, and compliments for the Municipality of Victoria, Tarlac." />
+  <title>Feedback · OneVictoria</title>
+  <link rel="shortcut icon" href="./src/assets/gemini-svg (1).svg" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+  <style>
+    :root {
+      --blue: #003B71;
+      --blue-hover: #002A52;
+      --blue-soft: #E6EEF5;
+      --gold: #F2A900;
+      --gold-dark: #D49300;
+      --gold-light: #FFC233;
+      --gold-soft: #FFF6E0;
+      --dark: #001F3F;
+      --light: #E8F0FE;
+      --accent: #005B9F;
+      --ink: #0B1C2C;
+      --body: #334155;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --canvas: #F5F7FA;
+      --surface: #FFFFFF;
+      --surface-2: #EEF3F8;
+      --success: #0D7A5F;
+      --success-bg: #E6F6F1;
+      --danger: #B42318;
+      --danger-bg: #FEE4E2;
+      --header-h: 64px;
+      --radius: 16px;
+      --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
+      --shadow-card: 0 1px 2px rgba(15, 23, 42, .04), 0 12px 32px rgba(15, 23, 42, .06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--canvas);
+      color: var(--body);
+      font-size: 14.5px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--blue);
+      text-decoration: underline;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* ===== Header: matches index.html public navbar ===== */
+    header.app {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: var(--header-h);
+      background: rgba(255, 255, 255, .95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .app-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      height: 100%;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--blue);
+      text-decoration: none;
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .brand:hover {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .seal {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--dark));
+      display: grid;
+      place-items: center;
+      flex: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+    }
+
+    .seal svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--gold);
+    }
+
+    .brand-name {
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1;
+      color: var(--blue);
+      letter-spacing: -.01em;
+    }
+
+    .brand-sub {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #9AA6B4;
+      margin-top: 4px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+      margin-left: auto;
+      white-space: nowrap;
+      padding: 9px 18px;
+      border-radius: 10px;
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+      transition: background .18s ease;
+    }
+
+    .back:hover {
+      background: var(--gold-light);
+      color: var(--dark);
+      text-decoration: none;
+    }
+
+    .back svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ===== Layout ===== */
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px 16px 56px;
+    }
+
+    .doc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ===== Hero: matches the gradient banner on the other pages ===== */
+    .doc-hero {
+      position: relative;
+      padding: 40px 36px 34px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--dark) 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .doc-hero::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -70px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 169, 0, .22), transparent 68%);
+      pointer-events: none;
+    }
+
+    .kicker {
+      position: relative;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .doc-hero h1 {
+      position: relative;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -.025em;
+      line-height: 1.1;
+    }
+
+    .lede {
+      position: relative;
+      margin-top: 12px;
+      max-width: 56ch;
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, .72);
+    }
+
+    form {
+      padding: 34px 36px 38px;
+      display: grid;
+      gap: 26px;
+    }
+
+    label.lbl,
+    .lbl {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 9px;
+      letter-spacing: .005em;
+    }
+
+    .req {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .opt {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    /* ===== Star rating ===== */
+    .stars {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .star {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 3px;
+      line-height: 0;
+      border-radius: 8px;
+      transition: transform .15s ease;
+    }
+
+    .star:hover {
+      transform: scale(1.14);
+    }
+
+    .star svg {
+      width: 27px;
+      height: 27px;
+      fill: #DFE5EC;
+      transition: fill .18s ease;
+    }
+
+    .star:hover svg,
+    .star.on svg {
+      fill: var(--gold);
+    }
+
+    #rating-label {
+      margin-left: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* ===== Type chips ===== */
+    .types {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .type {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .12s ease;
+    }
+
+    .type:hover {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+      transform: translateY(-1px);
+    }
+
+    .type.selected {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      box-shadow: 0 0 0 3px rgba(0, 59, 113, .1);
+    }
+
+    .type .ico {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+
+    .type .ico svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .type strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .type span span,
+    .type>span>span {
+      display: block;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ===== Fields ===== */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #9AA6B4;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 59, 113, .13);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 124px;
+      line-height: 1.6;
+      resize: none;
+    }
+
+    .field input.error,
+    .field textarea.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(180, 35, 24, .1);
+    }
+
+    .hint {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 7px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .err {
+      display: none;
+      margin-top: 7px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--danger);
+    }
+
+    .err.show {
+      display: block;
+    }
+
+    /* ===== Upload ===== */
+    .drop {
+      border: 1.5px dashed #C6D2E0;
+      border-radius: 14px;
+      background: var(--surface-2);
+      padding: 26px 18px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      transition: border-color .18s ease, background .18s ease;
+    }
+
+    .drop:hover,
+    .drop.drag {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+    }
+
+    .drop.has {
+      text-align: left;
+      background: var(--surface);
+      border-style: solid;
+      border-color: var(--border);
+      cursor: default;
+    }
+
+    .drop strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #9AA6B4;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .flist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .fitem {
+      position: relative;
+      width: 96px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 8px;
+      background: var(--surface);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    }
+
+    .fitem img {
+      width: 100%;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 7px;
+      display: block;
+    }
+
+    .fitem p {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .fitem small {
+      font-size: 9.5px;
+      color: var(--muted);
+    }
+
+    .fitem button,
+    .clear {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-weight: 800;
+      border-radius: 8px;
+      transition: filter .15s ease;
+    }
+
+    .fitem button {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 13px;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, .18);
+    }
+
+    .fitem button:hover,
+    .clear:hover {
+      filter: brightness(.95);
+    }
+
+    .clear {
+      padding: 7px 13px;
+      font-size: 11.5px;
+    }
+
+    /* ===== Terms + submit ===== */
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      font-size: 12.5px;
+      color: var(--body);
+      cursor: pointer;
+      line-height: 1.55;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 15px;
+    }
+
+    .terms input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--blue);
+      flex: none;
+      margin-top: 1px;
+      cursor: pointer;
+    }
+
+    .submit {
+      width: 100%;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 900;
+      letter-spacing: .01em;
+      color: var(--dark);
+      background: var(--gold);
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(242, 169, 0, .28);
+      transition: background .18s ease, transform .12s ease, box-shadow .18s ease;
+    }
+
+    .submit:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(242, 169, 0, .34);
+    }
+
+    .submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== Footer ===== */
+    footer.site {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .links {
+      display: flex;
+      gap: 18px;
+      font-weight: 700;
+    }
+
+    .links a {
+      color: var(--muted);
+    }
+
+    .links a:hover {
+      color: var(--blue);
+    }
+
+    .links .here {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    /* ===== Success modal ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 8, 20, .72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 120;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 36px 30px 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      animation: pop .22s ease-out;
+    }
+
+    @keyframes pop {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .ok-ico {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--success-bg);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+    }
+
+    .ok-ico svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--success);
+    }
+
+    .modal h2 {
+      font-size: 19px;
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 9px;
+      letter-spacing: -.015em;
+    }
+
+    .modal p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 7px;
+      line-height: 1.6;
+    }
+
+    .modal .ref {
+      display: inline-block;
+      font-weight: 900;
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-radius: 7px;
+      padding: 3px 9px;
+      letter-spacing: .04em;
+    }
+
+    .modal button {
+      margin-top: 20px;
+      width: 100%;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      background: var(--blue);
+      border: none;
+      border-radius: 11px;
+      padding: 13px;
+      cursor: pointer;
+      transition: background .18s ease;
+    }
+
+    .modal button:hover {
+      background: var(--blue-hover);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 700px) {
+
+      .types,
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+
+      .doc-hero {
+        padding: 30px 20px 26px;
+      }
+
+      form {
+        padding: 26px 20px 30px;
+      }
+
+      .doc-hero h1 {
+        font-size: 27px;
+      }
+
+      .wrap {
+        padding: 18px 12px 44px;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      footer.site {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .back span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="app">
+    <div class="app-inner">
+      <a class="brand" href="index.html">
+        <div class="seal" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 10l8-6 8 6v10H4V10zm8 1a3 3 0 100 6 3 3 0 000-6z" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">OneVictoria</div>
+          <div class="brand-sub">Resident Hub</div>
+        </div>
+      </a>
+      <a class="back" href="/index.html">
+        <svg viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back to Hub</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <article class="doc">
+      <div class="doc-hero">
+        <div class="kicker">Support · Municipality of Victoria</div>
+        <h1>Feedback</h1>
+        <p class="lede">Report a bug, suggest an improvement, or tell us what is working. Attach a screenshot if it
+          helps.</p>
+      </div>
+
+      <form id="feedback-form" novalidate>
+        <div>
+          <span class="lbl">Overall experience</span>
+          <div class="stars" id="rating-stars">
+            <button type="button" class="star" data-rating="1" title="Very Poor" aria-label="1 star"><svg
+                viewBox="0 0 24 24">
+                <path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z" />
+              </svg></button>
+            <button type="button" class="star" data-rating="2" title="Poor" aria-label="2 stars"><svg
+                viewBox="0 0 24 24">
+                <path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z" />
+              </svg></button>
+            <button type="button" class="star" data-rating="3" title="Average" aria-label="3 stars"><svg
+                viewBox="0 0 24 24">
+                <path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z" />
+              </svg></button>
+            <button type="button" class="star" data-rating="4" title="Good" aria-label="4 stars"><svg
+                viewBox="0 0 24 24">
+                <path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z" />
+              </svg></button>
+            <button type="button" class="star" data-rating="5" title="Excellent" aria-label="5 stars"><svg
+                viewBox="0 0 24 24">
+                <path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z" />
+              </svg></button>
+            <span id="rating-label">Optional</span>
+          </div>
+          <input type="hidden" id="rating-value" name="rating" />
+        </div>
+
+        <div>
+          <span class="lbl">Type <span class="req">*</span></span>
+          <div class="types">
+            <button type="button" class="type" data-type="Suggestion">
+              <span class="ico" style="background:#E0F2FE;color:#026AA2"><svg viewBox="0 0 24 24">
+                  <path d="M9 21h6v-1.5H9V21zm3-19a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z" />
+                </svg></span>
+              <span><strong>Suggestion</strong><span>Ideas to improve the hub</span></span>
+            </button>
+            <button type="button" class="type" data-type="Bug Report">
+              <span class="ico" style="background:#FEE4E2;color:#B42318"><svg viewBox="0 0 24 24">
+                  <path
+                    d="M20 8h-2.8l1.4-1.4-1.4-1.4L14.8 8H9.2L6.8 5.2 5.4 6.6 6.8 8H4v2h1.1c-.1.3-.1.7-.1 1H4v2h1v1c0 .3 0 .7.1 1H4v2h2.8l-1.4 1.4 1.4 1.4L9.2 18h5.6l2.4 2.8 1.4-1.4L16.2 18H20v-2h-1.1c.1-.3.1-.7.1-1H20v-2h-1v-1c0-.3 0-.7-.1-1H20V8z" />
+                </svg></span>
+              <span><strong>Bug report</strong><span>Something is broken</span></span>
+            </button>
+            <button type="button" class="type" data-type="Compliment">
+              <span class="ico" style="background:#E6F6F1;color:#0D7A5F"><svg viewBox="0 0 24 24">
+                  <path
+                    d="M2 21h4V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.3l1-4.6.1-.5a1 1 0 00-.3-.7L13.2 1 7.6 6.6A2 2 0 007 8v11a2 2 0 002 2h8.3c.8 0 1.5-.5 1.8-1.2l2.7-6.3c.1-.3.2-.6.2-.9v-2z" />
+                </svg></span>
+              <span><strong>Compliment</strong><span>What is working well</span></span>
+            </button>
+            <button type="button" class="type" data-type="Other">
+              <span class="ico" style="background:#E6EEF5;color:#003B71"><svg viewBox="0 0 24 24">
+                  <path
+                    d="M3 17.2V21h3.8L17.8 9.9l-3.8-3.8L3 17.2zM20.7 7c.4-.4.4-1 0-1.4l-2.3-2.3a1 1 0 00-1.4 0l-1.8 1.8 3.8 3.8L20.7 7z" />
+                </svg></span>
+              <span><strong>Other</strong><span>General comment</span></span>
+            </button>
+          </div>
+          <input type="hidden" id="feedback-type" name="feedbackType" />
+          <p class="err" id="type-error">Select a feedback type.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label class="lbl" for="feedback-name">Full name <span class="req">*</span></label>
+            <input id="feedback-name" name="fullName" type="text" autocomplete="name" placeholder="Juan Dela Cruz"
+              required />
+            <p class="err" id="name-error">Enter your full name.</p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="feedback-email">Email <span class="req">*</span></label>
+            <input id="feedback-email" name="email" type="email" autocomplete="email" placeholder="juan@email.com"
+              required />
+            <p class="err" id="email-error">Enter a valid email address.</p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="feedback-phone">Mobile <span class="req">*</span></label>
+            <input id="feedback-phone" name="phone" type="tel" inputmode="numeric" maxlength="11"
+              placeholder="09123456789" required />
+            <p class="err" id="phone-error">Use an 11-digit number starting with 09.</p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="feedback-address">Address <span class="opt">(optional)</span></label>
+            <input id="feedback-address" name="address" type="text" placeholder="Barangay, Victoria, Tarlac" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="feedback-subject">Subject <span class="req">*</span></label>
+          <input id="feedback-subject" name="subject" type="text" placeholder="Short summary" required />
+          <p class="err" id="subject-error">Enter a subject.</p>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="feedback-message">Details <span class="req">*</span></label>
+          <textarea id="feedback-message" name="message" rows="5" maxlength="2000"
+            placeholder="What happened, what you expected, or what we should add." required></textarea>
+          <div class="hint"><span>Minimum 10 characters</span><span><span id="feedback-char-count">0</span>/2000</span>
+          </div>
+          <p class="err" id="message-error">Write at least 10 characters.</p>
+        </div>
+
+        <div>
+          <span class="lbl">Screenshots <span class="opt">(optional · up to 5 images, 10MB each)</span></span>
+          <div class="drop" id="file-upload-area">
+            <input type="file" id="file-input" accept="image/*" multiple hidden />
+            <div id="upload-placeholder">
+              Drop images here or click to browse
+              <strong>PNG, JPG, or GIF</strong>
+            </div>
+            <div id="upload-preview" hidden>
+              <p style="font-size:12px;font-weight:700;color:var(--ink)"><span id="file-count">0</span>/5 selected</p>
+              <div class="flist" id="file-list"></div>
+              <button type="button" class="clear" id="clear-files">Remove all</button>
+            </div>
+          </div>
+          <p class="err" id="file-error"></p>
+        </div>
+
+        <label class="terms">
+          <input type="checkbox" id="feedback-terms" />
+          <span>The information is accurate and may be reviewed under the <a href="privacy-policy.html">Privacy
+              Policy</a>.</span>
+        </label>
+        <p class="err" id="terms-error">Please confirm before submitting.</p>
+
+        <button type="submit" class="submit" id="submit-feedback-btn">Submit feedback</button>
+      </form>
+    </article>
+
+    <footer class="site">
+      <p>© 2026 Municipality of Victoria. All rights reserved.</p>
+      <nav class="links" aria-label="Legal">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-of-service.html">Terms</a>
+        <a href="help-center.html">Help</a>
+        <span class="here">Feedback</span>
+      </nav>
+    </footer>
+  </div>
+
+  <div id="feedback-success" class="overlay" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="modal">
+      <div class="ok-ico"><svg viewBox="0 0 24 24">
+          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+        </svg></div>
+      <h2 id="success-title">Feedback received</h2>
+      <p>Reference <span class="ref" id="ref-number-display"></span></p>
+      <p>The municipal team will review it and reply if a response is needed.</p>
+      <button type="button" id="close-success">Close</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6rgutkYK7MZ3F0Xne6Zs4PyEiPME7ePM",
+      authDomain: "onevictoria-23409.firebaseapp.com",
+      projectId: "onevictoria-23409",
+      storageBucket: "onevictoria-23409.firebasestorage.app",
+      messagingSenderId: "334731169631",
+      appId: "1:334731169631:web:7484599232fef8b06eb0ea",
+      measurementId: "G-0ML9K6JSK8",
+    };
+    const app = initializeApp(firebaseConfig);
+    window.db = getFirestore(app);
+    window.fbCollection = collection;
+    window.fbAddDoc = addDoc;
+    window.fbGetDocs = getDocs;
+    window.fbQuery = query;
+    window.fbWhere = where;
+    window.fbLimit = limit;
+    window.fbServerTimestamp = serverTimestamp;
+  </script>
+
+  <script>
+    let selectedRating = 0;
+    let selectedFiles = [];
+    const MAX_FILES = 5;
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    const labels = ["", "Very poor", "Poor", "Average", "Good", "Excellent"];
+
+    const stars = [...document.querySelectorAll(".star")];
+    function paintStars(n, cls) {
+      stars.forEach((s, i) => s.classList.toggle(cls, i < n));
+    }
+    function selectRating(n) {
+      selectedRating = n;
+      document.getElementById("rating-value").value = n;
+      document.getElementById("rating-label").textContent = labels[n];
+      paintStars(n, "on");
+    }
+    stars.forEach((btn) => {
+      const n = +btn.dataset.rating;
+      btn.addEventListener("click", () => selectRating(n));
+      btn.addEventListener("mouseenter", () => paintStars(n, "on"));
+      btn.addEventListener("mouseleave", () => paintStars(selectedRating, "on"));
+    });
+
+    document.querySelectorAll(".type").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".type").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        document.getElementById("feedback-type").value = btn.dataset.type;
+        hideErr("type-error");
+      });
+    });
+
+    const drop = document.getElementById("file-upload-area");
+    const fileInput = document.getElementById("file-input");
+    drop.addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
+      fileInput.click();
+    });
+    drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("drag"); });
+    drop.addEventListener("dragleave", () => drop.classList.remove("drag"));
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      drop.classList.remove("drag");
+      addFiles([...e.dataTransfer.files]);
+    });
+    fileInput.addEventListener("change", (e) => {
+      addFiles([...e.target.files]);
+      fileInput.value = "";
+    });
+    document.getElementById("clear-files").addEventListener("click", (e) => {
+      e.stopPropagation();
+      selectedFiles = [];
+      renderFiles();
+    });
+
+    function addFiles(files) {
+      const errors = [];
+      files.forEach((file) => {
+        if (!file.type.startsWith("image/")) { errors.push(file.name + " is not an image."); return; }
+        if (file.size > MAX_FILE_SIZE) { errors.push(file.name + " is over 10MB."); return; }
+        if (selectedFiles.length >= MAX_FILES) { errors.push("Maximum 5 images."); return; }
+        if (selectedFiles.some((f) => f.name === file.name && f.size === file.size)) return;
+        selectedFiles.push(file);
+      });
+      const fe = document.getElementById("file-error");
+      fe.textContent = errors.join(" ");
+      fe.classList.toggle("show", errors.length > 0);
+      renderFiles();
+    }
+
+    function renderFiles() {
+      const ph = document.getElementById("upload-placeholder");
+      const pv = document.getElementById("upload-preview");
+      const list = document.getElementById("file-list");
+      if (!selectedFiles.length) {
+        ph.hidden = false;
+        pv.hidden = true;
+        drop.classList.remove("has");
+        return;
+      }
+      ph.hidden = true;
+      pv.hidden = false;
+      drop.classList.add("has");
+      document.getElementById("file-count").textContent = selectedFiles.length;
+      list.innerHTML = selectedFiles.map((file, i) => `
+        <div class="fitem">
+          <img src="${URL.createObjectURL(file)}" alt="" />
+          <div style="flex:1;min-width:0">
+            <p>${escapeHtml(file.name)}</p>
+            <small>${formatSize(file.size)}</small>
+          </div>
+          <button type="button" data-i="${i}" aria-label="Remove">Remove</button>
+        </div>`).join("");
+      list.querySelectorAll("button").forEach((b) => {
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectedFiles.splice(+b.dataset.i, 1);
+          renderFiles();
+        });
+      });
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    document.getElementById("feedback-message").addEventListener("input", function () {
+      document.getElementById("feedback-char-count").textContent = this.value.length;
+      hideErr("message-error");
+      this.classList.remove("error");
+    });
+    document.getElementById("feedback-phone").addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, "").slice(0, 11);
+    });
+    ["feedback-name", "feedback-email", "feedback-subject"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", function () {
+        this.classList.remove("error");
+        hideErr(id.replace("feedback-", "") + "-error");
+      });
+    });
+
+    function showErr(id) { document.getElementById(id).classList.add("show"); }
+    function hideErr(id) { document.getElementById(id).classList.remove("show"); }
+
+    function validateForm() {
+      let ok = true;
+      const name = document.getElementById("feedback-name");
+      const email = document.getElementById("feedback-email");
+      const phone = document.getElementById("feedback-phone");
+      const subject = document.getElementById("feedback-subject");
+      const message = document.getElementById("feedback-message");
+      const type = document.getElementById("feedback-type").value;
+      const terms = document.getElementById("feedback-terms").checked;
+
+      const checks = [
+        [name.value.trim().length < 2, "name-error", name],
+        [!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()), "email-error", email],
+        [!/^09\d{9}$/.test(phone.value.trim()), "phone-error", phone],
+        [!type, "type-error", null],
+        [!subject.value.trim(), "subject-error", subject],
+        [message.value.trim().length < 10, "message-error", message],
+        [!terms, "terms-error", null],
+      ];
+      checks.forEach(([fail, err, input]) => {
+        document.getElementById(err).classList.toggle("show", fail);
+        if (input) input.classList.toggle("error", fail);
+        if (fail) ok = false;
+      });
+      return ok;
+    }
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+    }
+
+    function compressImage(file, maxSide = 1280, quality = 0.72) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          toBase64(file).then(resolve).catch(reject);
+        };
+        img.src = url;
+      });
+    }
+
+    async function waitForFirebase(ms = 8000) {
+      const start = Date.now();
+      while (Date.now() - start < ms) {
+        if (window.db && window.fbAddDoc && window.fbCollection) return true;
+        await new Promise((r) => setTimeout(r, 80));
+      }
+      return !!(window.db && window.fbAddDoc && window.fbCollection);
+    }
+
+    function refNo() {
+      return "FB-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+    }
+
+    const overlay = document.getElementById("feedback-success");
+    document.getElementById("close-success").addEventListener("click", () => overlay.classList.remove("show"));
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.remove("show"); });
+
+    function getSessionResident() {
+      try {
+        const raw = localStorage.getItem("barangayUser");
+        if (!raw) return null;
+        const u = JSON.parse(raw);
+        if (u && u.id) return u;
+      } catch (e) { }
+      return null;
+    }
+
+    (function prefillResident() {
+      const u = getSessionResident();
+      if (!u) return;
+      const name = document.getElementById("feedback-name");
+      const email = document.getElementById("feedback-email");
+      const phone = document.getElementById("feedback-phone");
+      const address = document.getElementById("feedback-address");
+      if (name && !name.value && u.name) name.value = u.name;
+      if (email && !email.value && u.email) email.value = u.email;
+      if (phone && !phone.value && u.phone) phone.value = u.phone;
+      if (address && !address.value && u.address) address.value = u.address;
+    })();
+
+    async function resolveResidentId(email) {
+      const session = getSessionResident();
+      if (session && session.id) return { id: session.id, name: session.name || "", email: session.email || email };
+      const clean = (email || "").trim().toLowerCase();
+      if (!clean || !window.fbGetDocs || !window.fbQuery || !window.fbWhere) return null;
+      try {
+        const snap = await window.fbGetDocs(
+          window.fbQuery(
+            window.fbCollection(window.db, "residents"),
+            window.fbWhere("email", "==", clean),
+            window.fbLimit(1)
+          )
+        );
+        if (snap.empty) return null;
+        const docSnap = snap.docs[0];
+        return { id: docSnap.id, name: docSnap.data().name || "", email: clean };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    document.getElementById("feedback-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validateForm()) return;
+      const btn = document.getElementById("submit-feedback-btn");
+      btn.disabled = true;
+      btn.textContent = "Submitting…";
+      try {
+        const ready = await waitForFirebase();
+        if (!ready) throw new Error("Could not connect to the municipal database. Check your internet and try again.");
+
+        const referenceNumber = refNo();
+        const attachments = [];
+        for (const file of selectedFiles) {
+          const data = await compressImage(file);
+          attachments.push({
+            fileName: file.name.replace(/\.[^.]+$/, "") + ".jpg",
+            fileType: "image/jpeg",
+            fileSize: Math.round((data.length * 3) / 4),
+            data,
+            uploadedAt: new Date().toISOString(),
+          });
+        }
+        const feedbackType = document.getElementById("feedback-type").value;
+        const fullName = document.getElementById("feedback-name").value.trim();
+        const email = document.getElementById("feedback-email").value.trim().toLowerCase();
+        const subject = document.getElementById("feedback-subject").value.trim();
+        const message = document.getElementById("feedback-message").value.trim();
+        const resident = await resolveResidentId(email);
+
+        const contactData = {
+          fullName,
+          email,
+          phone: document.getElementById("feedback-phone").value.trim(),
+          address: document.getElementById("feedback-address").value.trim() || null,
+          kind: "feedback",
+          serviceCategory: "Feedback",
+          priority: feedbackType === "Bug Report" ? "High" : "Medium",
+          subject,
+          message,
+          rating: selectedRating || null,
+          feedbackType,
+          termsAccepted: true,
+          status: "Pending",
+          createdAt: window.fbServerTimestamp ? window.fbServerTimestamp() : new Date().toISOString(),
+          referenceNumber,
+          source: "feedback_page",
+          hasAttachments: attachments.length > 0,
+          attachmentCount: attachments.length,
+          residentId: resident && resident.id ? resident.id : null,
+          residentEmail: email,
+        };
+
+        const docRef = await window.fbAddDoc(
+          window.fbCollection(window.db, "contact_messages"),
+          contactData
+        );
+        if (attachments.length && docRef.id) {
+          const attCol = window.fbCollection(window.db, "contact_messages", docRef.id, "attachments");
+          for (const att of attachments) await window.fbAddDoc(attCol, att);
+        }
+
+        if (resident && resident.id) {
+          await window.fbAddDoc(window.fbCollection(window.db, "notifications"), {
+            residentId: resident.id,
+            title: "Feedback received",
+            message: "We received your feedback \"" + subject + "\" (" + referenceNumber + "). Status: Pending. We will update you here when staff review it.",
+            type: "feedback_status",
+            status: "Pending",
+            referenceNumber,
+            feedbackId: docRef.id,
+            read: false,
+            createdAt: window.fbServerTimestamp ? window.fbServerTimestamp() : new Date().toISOString(),
+          });
+        }
+
+        document.getElementById("ref-number-display").textContent = referenceNumber;
+        overlay.classList.add("show");
+        e.target.reset();
+        selectedRating = 0;
+        paintStars(0, "on");
+        document.getElementById("rating-label").textContent = "Optional";
+        document.querySelectorAll(".type").forEach((b) => b.classList.remove("selected"));
+        document.getElementById("feedback-char-count").textContent = "0";
+        selectedFiles = [];
+        renderFiles();
+      } catch (err) {
+        console.error(err);
+        const msg = err && err.message ? err.message : "Please try again.";
+        alert("Could not submit feedback. " + msg);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Submit feedback";
+      }
+    });
+  </script>
+</body>
+
+</html>

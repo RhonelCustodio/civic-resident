@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Help Center - OneVictoria</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tsu: {
+                            blue: "#003B71", blueLight: "#005B9F", blueDark: "#002A52",
+                            gold: "#F2A900", goldLight: "#FFC233", goldDark: "#D49300",
+                            dark: "#001F3F", light: "#E8F0FE", accent: "#005B9F",
+                            muted: "#64748B", ink: "#0B1C2C", body: "#334155",
+                            canvas: "#F5F7FA", blueSoft: "#E6EEF5", goldSoft: "#FFF6E0",
+                            success: "#0D7A5F", successSoft: "#E6F6F1",
+                            warning: "#B45309", warningSoft: "#FEF3C7",
+                            danger: "#B42318", dangerSoft: "#FEE4E2",
+                            info: "#026AA2", infoSoft: "#E0F2FE",
+                        },
+                        surface: { DEFAULT: "#FFFFFF", alt: "#F5F7FA", hover: "#EEF3F8", border: "#E2E8F0" },
+                    },
+                    boxShadow: { soft: "0 16px 40px rgba(15, 23, 42, 0.08)" },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+    <link rel="shortcut icon" href="./src/assets/gemini-svg (1).svg" type="image/x-icon" />
+</head>
+
+<body class="bg-white font-sans text-gray-800 antialiased min-h-screen flex flex-col">
+    <header class="fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm"
+        style="padding-top: env(safe-area-inset-top, 0px);">
+        <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
+            <a href="index.html" class="flex items-center gap-3 min-w-0 flex-1 overflow-hidden"
+                aria-label="OneVictoria home">
+                <span
+                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-tsu-blue to-tsu-dark text-tsu-gold flex items-center justify-center shadow-sm shrink-0">
+                    <i class="fa-solid fa-building-columns text-sm"></i>
+                </span>
+                <span class="text-left min-w-0">
+                    <span class="block text-sm font-black text-tsu-blue leading-none">OneVictoria</span>
+                    <span
+                        class="hidden sm:block text-[9px] text-gray-400 font-semibold mt-1 uppercase tracking-wider">Resident
+                        Hub</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-2 shrink-0 ml-auto">
+                <a href="index.html"
+                    class="px-4 sm:px-5 py-2 rounded-md bg-tsu-gold hover:bg-tsu-goldLight text-xs font-extrabold text-tsu-dark shadow-sm transition-colors flex items-center whitespace-nowrap">
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i><span>Back to Home</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 pt-16">
+        <section class="bg-gradient-to-br from-tsu-blue to-tsu-dark text-white">
+            <div class="max-w-4xl mx-auto px-6 lg:px-10 py-12 sm:py-16">
+                <h1 class="text-3xl sm:text-4xl font-black tracking-tight">Help Center</h1>
+                <p class="mt-3 text-sm text-white/70 max-w-2xl leading-relaxed">Answers to common questions about
+                    accounts, requests, and using OneVictoria.</p>
+                <p class="mt-4 text-[11px] font-semibold uppercase tracking-wider text-white/50">Last updated: 14 August
+                    2026</p>
+            </div>
+        </section>
+
+        <div class="max-w-4xl mx-auto px-6 lg:px-10 py-10 sm:py-14">
+            <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                <a href="#getting-started"
+                    class="rounded-2xl border border-gray-200 bg-white p-5 shadow-soft hover:border-tsu-gold transition-colors">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-tsu-blueSoft text-tsu-blue flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-rocket"></i></div>
+                    <h3 class="font-extrabold text-sm text-tsu-blue mb-1">Getting Started</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Create your account and get verified as a resident.
+                    </p>
+                </a>
+                <a href="#account"
+                    class="rounded-2xl border border-gray-200 bg-white p-5 shadow-soft hover:border-tsu-gold transition-colors">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-tsu-goldSoft text-tsu-goldDark flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-user-gear"></i></div>
+                    <h3 class="font-extrabold text-sm text-tsu-blue mb-1">Account &amp; Login</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Password resets, profile updates, and access
+                        issues.</p>
+                </a>
+                <a href="#services"
+                    class="rounded-2xl border border-gray-200 bg-white p-5 shadow-soft hover:border-tsu-gold transition-colors">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-tsu-successSoft text-tsu-success flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-file-lines"></i></div>
+                    <h3 class="font-extrabold text-sm text-tsu-blue mb-1">Requests &amp; Services</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">Track documents, permits, and announcements.</p>
+                </a>
+            </section>
+            <section id="getting-started" class="mb-8 scroll-mt-24">
+                <h2 class="text-lg font-extrabold text-tsu-blue flex items-center gap-2 mb-3"><i
+                        class="fa-solid fa-rocket text-tsu-gold text-sm"></i>Getting Started</h2>
+                <div class="space-y-3">
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>How do I create an account?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">Tap
+                            <strong>Get Started</strong> in the top navigation, then choose <strong>Create
+                                Account</strong> inside the login panel. Fill in your name, email, mobile number, and
+                            address, then agree to the Privacy Policy to submit.</div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>Why does my account need verification?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            Verification confirms you are a resident of Victoria before you can file requests. An
+                            administrator reviews your details and proof of residency, which usually takes one to three
+                            working days.</div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>Is OneVictoria free to use?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">Yes.
+                            Creating an account and browsing announcements is free. Certain documents and permits may
+                            carry the standard municipal fees, which are shown before you confirm a request.</div>
+                    </details>
+                </div>
+            </section>
+            <section id="account" class="mb-8 scroll-mt-24">
+                <h2 class="text-lg font-extrabold text-tsu-blue flex items-center gap-2 mb-3"><i
+                        class="fa-solid fa-user-gear text-tsu-gold text-sm"></i>Account &amp; Login</h2>
+                <div class="space-y-3">
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>I forgot my password. What should I do?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">On
+                            the login panel, tap <strong>Forgot password?</strong> and enter your registered email
+                            address. A reset link will be sent to that inbox. If it does not arrive within a few
+                            minutes, check your spam folder.</div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>The Get Started button is not responding.</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">This
+                            is usually a connection problem that stopped part of the page from loading. Pull down to
+                            refresh. If you opened the link from Messenger or Facebook, tap the menu icon and choose
+                            <strong>Open in browser</strong>.</div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>How do I update my profile or address?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">Log
+                            in, open your profile from the dashboard, and edit your details. Changes to your registered
+                            address may require re-verification before service requests are accepted.</div>
+                    </details>
+                </div>
+            </section>
+            <section id="services" class="mb-8 scroll-mt-24">
+                <h2 class="text-lg font-extrabold text-tsu-blue flex items-center gap-2 mb-3"><i
+                        class="fa-solid fa-file-lines text-tsu-gold text-sm"></i>Requests &amp; Services</h2>
+                <div class="space-y-3">
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>How do I track a request I submitted?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">Open
+                            your dashboard and go to your requests list. Each entry shows its current status &mdash;
+                            pending, in review, ready, or completed &mdash; along with the date it was last updated.
+                        </div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>How long does a document request take?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            Processing time depends on the document. Most barangay certificates are ready within one to
+                            three working days, while permits requiring inspection may take longer.</div>
+                    </details>
+                    <details class="group border border-gray-200 rounded-xl bg-white overflow-hidden">
+                        <summary
+                            class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 text-sm font-bold text-tsu-blue hover:bg-tsu-blueSoft/40 transition-colors">
+                            <span>Where do announcements come from?</span>
+                            <i
+                                class="fa-solid fa-chevron-down text-[11px] text-tsu-gold transition-transform group-open:rotate-180 shrink-0"></i>
+                        </summary>
+                        <div class="px-4 pb-4 pt-1 text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                            Announcements are posted by authorized municipal staff and appear newest first on the home
+                            feed and in the announcement center.</div>
+                    </details>
+                </div>
+            </section>
+            <section class="rounded-2xl bg-gradient-to-br from-tsu-blue to-tsu-dark text-white p-6 sm:p-8">
+                <h2 class="text-lg font-extrabold mb-2">Still need help?</h2>
+                <p class="text-sm text-white/70 leading-relaxed mb-5">Our support team is available Monday to Friday,
+                    8:00 AM to 5:00 PM.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="/cdn-cgi/l/email-protection#60131510100f1214200f0e05160903140f1209014e070f164e1008"
+                        class="px-5 py-2.5 rounded-xl bg-tsu-gold hover:bg-tsu-goldLight text-tsu-dark text-xs font-extrabold transition-colors flex items-center justify-center"><i
+                            class="fa-solid fa-envelope mr-2"></i>Email Support</a>
+                    <a href="feedback.html"
+                        class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold transition-colors flex items-center justify-center"><i
+                            class="fa-solid fa-comment-dots mr-2"></i>Send Feedback</a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="bg-gray-50 border-t border-gray-200 mt-auto">
+        <div class="max-w-6xl mx-auto px-6 lg:px-10 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-tsu-blue to-tsu-blueDark rounded-lg flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-building-columns text-tsu-gold text-xs"></i>
+                        </div>
+                        <span class="font-extrabold text-tsu-blue text-sm">OneVictoria</span>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed">Your gateway to community engagement.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-gray-800 mb-3">Quick Links</h4>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li><a href="privacy-policy.html"
+                                class="hover:text-tsu-blue transition-colors cursor-pointer">Privacy</a></li>
+                        <li><a href="terms-of-service.html"
+                                class="hover:text-tsu-blue transition-colors cursor-pointer">Terms</a></li>
+                        <li><a href="help-center.html"
+                                class="hover:text-tsu-blue transition-colors cursor-pointer">Help</a></li>
+                        <li><a href="feedback.html"
+                                class="hover:text-tsu-blue transition-colors cursor-pointer">Feedback</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-gray-800 mb-3">Contact</h4>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li><i class="fa-solid fa-location-dot mr-2 text-tsu-blue"></i>Victoria, Philippines</li>
+                        <li><i class="fa-solid fa-envelope mr-2 text-tsu-blue"></i><a href="/cdn-cgi/l/email-protection"
+                                class="__cf_email__"
+                                data-cfemail="f5868085859a8781b59a9b90839c96819a879c94db929a83db859d">[email&#160;protected]</a>
+                        </li>
+                        <li><i class="fa-solid fa-phone mr-2 text-tsu-blue"></i>+63 (02) 1234-5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-6 text-center">
+                <p class="text-xs text-gray-400">&copy; 2026 Municipality of Victoria. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+</body>
+
+</html>

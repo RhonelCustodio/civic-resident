@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Circular background -->
+  <circle cx="32" cy="32" r="32" fill="#1e3a8a"/>
+  <!-- Base and top steps -->
+  <path d="M14 46h36v5H14zM14 20h36v4H14z" fill="#ffffff"/>
+  <!-- Pillars -->
+  <path d="M18 26h6v18h-6zM29 26h6v18h-6zM40 26h6v18h-6z" fill="#ffffff"/>
+  <!-- Classic triangle roof -->
+  <polygon points="32,10 12,20 52,20" fill="#ffffff"/>
+</svg>
