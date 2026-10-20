@@ -10,8 +10,15 @@ hosting/.cache
 
 # Firebase Functions
 /functions/node_modules/
-/functions/.env
+/functions/.env*
+/functions/.secret*
 /functions/package-lock.json
+
+# Local secrets & credentials (NEVER commit)
+*.secret.local
+.secret*
+!.secret.local.example
+!functions/.secret.local.example
 
 # Firebase Emulators
 /firebase-*.zip

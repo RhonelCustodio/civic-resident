@@ -549,6 +549,200 @@ window.closeForgotPasswordModal = function () {
   }
 };
 
+// ===== RESEND VERIFICATION EMAIL (MAILJET) =====
+/**
+ * Opens a secure modal allowing residents to resend their verification email via Mailjet.
+ * Authenticates with credentials so verification can only be requested for the user's own account.
+ */
+window.handleResendVerification = function (prefilledEmail = "") {
+  const existingModal = document.getElementById("resend-verification-modal");
+  if (existingModal) existingModal.remove();
+
+  const defaultEmail =
+    prefilledEmail ||
+    document.getElementById("login-email")?.value.trim() ||
+    "";
+
+  const overlay = document.createElement("div");
+  overlay.id = "resend-verification-modal";
+  overlay.className =
+    "fixed inset-0 bg-[#070818]/80 backdrop-blur-lg z-[9999] flex items-center justify-center p-4";
+
+  const modal = document.createElement("div");
+  modal.className =
+    "glass rounded-lg max-w-md w-full p-8 border border-white/10 modal-enter relative";
+  modal.onclick = function (e) {
+    e.stopPropagation();
+  };
+
+  const safeDefaultEmail = defaultEmail
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+  modal.innerHTML = `
+    <button type="button" onclick="closeResendVerificationModal()" 
+            class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    
+    <div class="text-center mb-6">
+      <div class="w-14 h-14 bg-tsu-blue rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+        <i class="fa-solid fa-envelope-circle-check text-tsu-gold text-xl"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-tsu-gold tracking-tight">Resend Verification</h2>
+      <p class="text-sm text-gray-400 mt-1">Confirm your account credentials to send a fresh verification email via Mailjet.</p>
+    </div>
+    
+    <form id="resend-verification-form" class="space-y-4" novalidate>
+      <div>
+        <label class="block text-xs font-semibold text-[#C5CBE3] mb-1.5">Email Address</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+            <i class="fa-solid fa-envelope text-xs"></i>
+          </span>
+          <input type="email" id="resend-email" required value="${safeDefaultEmail}"
+                 class="w-full pl-9 pr-3 py-2.5 rounded-sm border border-white/10 bg-white/5 text-white placeholder-gray-400 focus:border-tsu-gold focus:ring-2 focus:ring-tsu-gold/20 text-sm transition-all"
+                 placeholder="example@gmail.com" 
+                 autocomplete="email" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-[#C5CBE3] mb-1.5">Account Password</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+            <i class="fa-solid fa-lock text-xs"></i>
+          </span>
+          <input type="password" id="resend-password" required 
+                 class="w-full pl-9 pr-3 py-2.5 rounded-sm border border-white/10 bg-white/5 text-white placeholder-gray-400 focus:border-tsu-gold focus:ring-2 focus:ring-tsu-gold/20 text-sm transition-all"
+                 placeholder="Enter your account password" 
+                 autocomplete="current-password" />
+        </div>
+        <p class="text-[10px] text-gray-400 mt-1">Credentials verify you are requesting an email for your own account.</p>
+      </div>
+
+      <div id="resend-verification-error" class="hidden text-xs font-medium text-red-500 flex items-start space-x-2">
+        <i class="fa-solid fa-circle-exclamation mt-0.5 text-[10px]"></i>
+        <span id="resend-verification-error-text"></span>
+      </div>
+      
+      <button type="submit" id="resend-verification-submit"
+              class="w-full bg-tsu-blue hover:bg-tsu-blueDark text-white font-bold py-2.5 rounded-sm text-sm uppercase tracking-wider shadow-lg transition-all flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-paper-plane text-xs"></i>
+        <span>Send Verification Email</span>
+      </button>
+    </form>
+    
+    <div class="text-center mt-4 pt-3 border-t border-white/10">
+      <p class="text-xs text-gray-400">
+        <button type="button" onclick="closeResendVerificationModal()" 
+                class="text-tsu-gold font-normal hover:underline">
+          Back to Sign In
+        </button>
+      </p>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  const form = document.getElementById("resend-verification-form");
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const email = document.getElementById("resend-email")?.value.trim().toLowerCase() || "";
+    const password = document.getElementById("resend-password")?.value || "";
+    const errBox = document.getElementById("resend-verification-error");
+    const errText = document.getElementById("resend-verification-error-text");
+    const submitBtn = document.getElementById("resend-verification-submit");
+
+    const showError = (msg) => {
+      if (errBox && errText) {
+        errText.textContent = msg;
+        errBox.classList.remove("hidden");
+        errBox.classList.add("flex");
+      }
+    };
+
+    if (!email || !password) {
+      showError("Please enter your email and password.");
+      return;
+    }
+
+    if (errBox) {
+      errBox.classList.add("hidden");
+      errBox.classList.remove("flex");
+    }
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i><span>Sending via Mailjet...</span>';
+    }
+
+    try {
+      // 1. Authenticate to establish identity and token
+      const uc = await signInWithEmailAndPassword(auth, email, password);
+      await uc.user.reload();
+
+      // 2. Check if already verified
+      if (uc.user.emailVerified) {
+        await signOut(auth);
+        closeResendVerificationModal();
+        window.showAlert(
+          "Already Verified",
+          "Your email address is already verified. You can log in directly.",
+          "success"
+        );
+        return;
+      }
+
+      // 3. Dispatch fresh verification email (relayed through Mailjet SMTP)
+      await sendEmailVerification(uc.user);
+
+      // 4. Safely sign out the unverified account
+      await signOut(auth);
+
+      closeResendVerificationModal();
+      window.showAlert(
+        "Verification Sent!",
+        `A new verification link has been delivered to ${email} via Mailjet. Please check your inbox and spam folder.`,
+        "success"
+      );
+    } catch (err) {
+      console.error("Resend verification failed:", err);
+      try { await signOut(auth); } catch (_) {}
+
+      let displayMsg = err.message || "Failed to resend verification email.";
+      if (
+        err.code === "auth/invalid-credential" ||
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/user-not-found"
+      ) {
+        displayMsg = "Invalid email or password. Please check your credentials.";
+      } else if (
+        err.code === "auth/too-many-requests" ||
+        err.code === "resource-exhausted" ||
+        err.message?.includes("wait")
+      ) {
+        displayMsg = "Please wait a moment before requesting another verification email.";
+      }
+
+      showError(displayMsg);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i><span>Send Verification Email</span>';
+      }
+    }
+  });
+};
+
+window.closeResendVerificationModal = function () {
+  const modal = document.getElementById("resend-verification-modal");
+  if (modal) {
+    modal.remove();
+    document.body.style.overflow = "";
+  }
+};
+
 // ===== PASSWORD SYNC ON LOGIN =====
 /**
  * Sync the password with Firestore after login
@@ -3423,7 +3617,26 @@ document
     showLoading("Creating account...");
     try {
       const uc = await createUserWithEmailAndPassword(auth, email, pass);
-      await sendEmailVerification(uc.user);
+
+      // 1. Deliver official verification email via Firebase Auth (relayed through Mailjet SMTP)
+      try {
+        await sendEmailVerification(uc.user);
+      } catch (mailErr) {
+        console.error("Verification email dispatch failed via Mailjet SMTP:", mailErr);
+        // Rollback Firebase Auth user so the email is not stuck in an unverified 'already in use' state
+        try {
+          await uc.user.delete();
+        } catch (_) {}
+        hideLoading();
+        window.showAlert(
+          "Verification Email Failed",
+          `Could not send verification email: ${mailErr.message || mailErr.code}. Please verify your Firebase Console Custom SMTP settings.`,
+          "error"
+        );
+        return;
+      }
+
+      // 2. Only store resident profile in Firestore once verification email has been successfully dispatched
       await setDoc(doc(db, "residents", uc.user.uid), {
         name,
         email,
@@ -3448,6 +3661,7 @@ document
         lastAgeUpdate: null,
         role: "resident",
       });
+
       await signOut(auth);
       hideLoading();
       document.getElementById("register-form")?.reset();
@@ -3455,7 +3669,7 @@ document
       window.clearAllFieldErrors?.();
       window.showAlert(
         "Verification Sent!",
-        "Check your email to verify.",
+        `A verification link has been sent to ${email} via Mailjet. Please check your inbox and spam folder before signing in.`,
         "success",
       );
       window.toggleAuthPanels(false);
@@ -3512,7 +3726,11 @@ document.getElementById("login-form")?.addEventListener("submit", async (e) => {
       hideLoading();
       // Leave the login panel open so the user can see the error and retry
       // after verifying their email. The auth listener must not close it.
-      window.showAlert("Not Verified", "Check your spam inbox and verify your email and try again.", "error");
+      window.showAlert(
+        "Email Not Verified",
+        "Your email address is not verified yet. Please check your inbox and spam folder, or click 'Resend Verification' below.",
+        "error"
+      );
       return;
     }
     // ===== DISABLED ACCOUNT CHECK =====
@@ -8536,5 +8754,7 @@ window.copyToClipboard = window.copyToClipboard;
 window.downloadQRCode = window.downloadQRCode;
 window.shareQRCode = window.shareQRCode;
 window.handleForgotPassword = window.handleForgotPassword;
+window.handleResendVerification = window.handleResendVerification;
+window.closeResendVerificationModal = window.closeResendVerificationModal;
 window.switchDonationType = window.switchDonationType;
 window.setDonationAmount = window.setDonationAmount;
