@@ -2447,18 +2447,23 @@
         </div>
     </div>
     <!-- QR payment popup: opened only after Pay now is selected -->
-    <div id="payment-qr-popup" onclick="if (event.target === this) closePaymentQrPopup();"
+    <!-- Backdrop clicks disabled: user must click Back to navigate -->
+    <div id="payment-qr-popup"
         class="payment-overlay fixed inset-0 z-[60] hidden flex items-center justify-center overflow-y-auto p-4 sm:p-6">
         <div class="payment-qr-card modal-enter relative" role="dialog" aria-modal="true"
             aria-label="Scan QR code and submit proof of payment" onclick="event.stopPropagation()">
             <div class="payment-qr-header">
-                <div class="payment-qr-header-copy">
-                    <p class="payment-qr-step">Step 2 of 2</p>
-                    <h3 class="payment-qr-title">Scan, pay, and submit proof</h3>
+                <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                    <button type="button" id="payment-qr-back-btn" onclick="backToPaymentMethods()"
+                        aria-label="Back to payment method selection" class="payment-back-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <div class="payment-qr-header-copy min-w-0">
+                        <p class="payment-qr-step">Step 2 of 2</p>
+                        <h3 class="payment-qr-title truncate">Scan, pay, and submit proof</h3>
+                    </div>
                 </div>
-                <button type="button" onclick="closePaymentQrPopup()" aria-label="Close" class="payment-close-btn">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
             </div>
             <div class="payment-qr-body">
                 <div id="qr-code-container" class="my-qr">
@@ -2471,20 +2476,8 @@
                         </span>
                         <div>
                             <h4>Submit proof of payment</h4>
-                            <p>The reference number and a screenshot of your successful payment are both required for
-                                verification.</p>
+                            <p>A screenshot of your successful payment is required for verification.</p>
                         </div>
-                    </div>
-                    <div class="payment-reference-field">
-                        <label class="payment-label" for="payment-reference-input">
-                            Reference number <span class="payment-required-star">*</span>
-                        </label>
-                        <input type="text" id="payment-reference-input" class="payment-input"
-                            placeholder="e.g., 9012 345 678901" autocomplete="off" required>
-                        <p class="payment-field-hint">
-                            <i class="fa-solid fa-circle-info"></i>
-                            Copy the Ref. No. shown on your GCash / Maya / bank receipt.
-                        </p>
                     </div>
                     <div class="payment-upload-zone"
                         onclick="document.getElementById('payment-screenshot-input').click()">

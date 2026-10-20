@@ -1736,6 +1736,39 @@ select#reg-gender:invalid {
     letter-spacing: -0.01em;
 }
 
+/* Back button in QR header */
+.payment-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 2.25rem;
+    padding: 0 0.85rem;
+    border-radius: 0.45rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.payment-back-btn:hover {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.38);
+}
+
+.payment-back-btn:active {
+    transform: scale(0.96);
+}
+
+.payment-back-btn i {
+    font-size: 0.75rem;
+}
+
 .payment-qr-body {
     flex: 1 1 auto;
     min-height: 0;
@@ -1944,6 +1977,13 @@ select#reg-gender:invalid {
         padding: 1rem 1.1rem;
     }
 
+    .payment-back-btn {
+        height: 2rem;
+        padding: 0 0.65rem;
+        font-size: 0.75rem;
+        gap: 0.35rem;
+    }
+
     .payment-qr-body {
         padding: 1.1rem 1.1rem 1.3rem;
     }
@@ -2126,10 +2166,6 @@ button.breadcrumb-item:hover i {
 .payment-field-hint i {
     color: #026AA2;
     margin-top: 1px;
-}
-
-.payment-reference-field {
-    margin: 14px 0;
 }
 
 .payment-input:required:invalid:not(:placeholder-shown) {

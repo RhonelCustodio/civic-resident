@@ -1567,6 +1567,13 @@ window.closePaymentQrPopup = function () {
   if (popup) popup.classList.add("hidden");
 };
 
+window.backToPaymentMethods = function () {
+  const popup = document.getElementById("payment-qr-popup");
+  if (popup) popup.classList.add("hidden");
+  const modal = document.getElementById("payment-modal");
+  if (modal) modal.classList.remove("hidden");
+};
+
 function openPaymentQrPopup() {
   const popup = document.getElementById("payment-qr-popup");
   if (popup) popup.classList.remove("hidden");
@@ -1702,11 +1709,6 @@ window.openPaymentModal = function (
   window._paymentScreenshotFile = null;
   window.closePaymentQrPopup?.();
 
-  // PAYMENT REQUIRED FIELDS: clear the reference number from any previous
-  // payment attempt.
-  const refInput = document.getElementById("payment-reference-input");
-  if (refInput) refInput.value = "";
-
   // Show the Pay Now button
   const payButton = document.getElementById("payment-submit-btn");
   if (payButton) payButton.classList.remove("hidden");
@@ -1839,10 +1841,6 @@ async function saveDonation(pr) {
     if (pr.receiverNumber) dd.receiverNumber = pr.receiverNumber;
     if (pr.receiverName) dd.receiverName = pr.receiverName;
     if (pr.screenshot) dd.paymentScreenshot = pr.screenshot;
-    // PAYMENT REQUIRED FIELDS: persist the user's receipt reference number
-    // so the admin can cross-check it during verification.
-    if (pr.userReferenceNumber)
-      dd.userReferenceNumber = pr.userReferenceNumber;
     await addDoc(collection(db, "donations"), dd);
   } catch (e) {
     console.error("Save donation error:", e);
@@ -2036,10 +2034,6 @@ window.submitPaymentWithScreenshot = async function () {
   const donorName =
     document.getElementById("payment-donor-name")?.value?.trim() || "";
   const screenshotFile = window._paymentScreenshotFile;
-  // PAYMENT REQUIRED FIELDS: the sender's reference number from the GCash /
-  // Maya / bank receipt is now mandatory so the admin can verify payments.
-  const referenceNumber =
-    document.getElementById("payment-reference-input")?.value?.trim() || "";
 
   if (!pm) {
     window.showAlert(
@@ -2055,27 +2049,6 @@ window.submitPaymentWithScreenshot = async function () {
       "Donor name is required. Please enter your name.",
       "error",
     );
-    return;
-  }
-  if (!referenceNumber) {
-    window.showAlert(
-      "Reference Number Required",
-      "Please enter the reference number shown on your payment receipt (GCash/Maya/Bank). It is required for verification.",
-      "error",
-    );
-    document.getElementById("payment-reference-input")?.focus();
-    return;
-  }
-  if (
-    referenceNumber.length < 6 ||
-    !/^[A-Za-z0-9\- ]+$/.test(referenceNumber)
-  ) {
-    window.showAlert(
-      "Invalid Reference Number",
-      "The reference number must be at least 6 characters and contain only letters, numbers, or dashes.",
-      "error",
-    );
-    document.getElementById("payment-reference-input")?.focus();
     return;
   }
   if (!screenshotFile) {
@@ -2119,7 +2092,6 @@ window.submitPaymentWithScreenshot = async function () {
     pr.transactionId = transactionId;
     pr.status = STATUS.PENDING;
     pr.screenshot = screenshotBase64;
-    pr.userReferenceNumber = referenceNumber;
 
     await saveDonation(pr);
 
