@@ -152,8 +152,8 @@ async function withRetryBuffer(taskFn, options = {}) {
 }
 
 // ===== BOOT LOADER (slow-internet aware) =====
-// The #page-loading-overlay markup existed but was never activated. It now
-// covers the whole boot sequence and reassures users on slow connections.
+// The #page-loading-overlay covers the boot sequence. Keep its progress bar,
+// but remove any legacy spinner circle so the startup loader is not duplicated.
 let bootLoaderSlowTimer = null,
   bootLoaderFailsafeTimer = null,
   bootLoaderDone = false;
@@ -161,6 +161,7 @@ let bootLoaderSlowTimer = null,
 function showBootLoader() {
   const overlay = document.getElementById("page-loading-overlay");
   if (!overlay || bootLoaderDone) return;
+  overlay.querySelector(".loading-spinner")?.remove();
   overlay.classList.add("active");
   const msg = overlay.querySelector("p");
   // After 8s on a slow connection, swap in a reassuring message.
@@ -926,6 +927,86 @@ function getEventDueTimestamp(dateValue, timeValue) {
   const hour = String(Math.floor(dueMinutes / 60)).padStart(2, "0");
   const minute = String(dueMinutes % 60).padStart(2, "0");
   return new Date(`${dateKey}T${hour}:${minute}:00+08:00`).getTime();
+}
+
+function getEventCreatedTimestamp(event) {
+  if (!event) return 0;
+  const raw = event.createdAt;
+  if (raw) {
+    if (typeof raw.toMillis === "function") {
+      const ms = raw.toMillis();
+      if (Number.isFinite(ms)) return ms;
+    }
+    if (typeof raw.toDate === "function") {
+      const ms = raw.toDate().getTime();
+      if (Number.isFinite(ms)) return ms;
+    }
+    if (typeof raw.seconds === "number") {
+      const ms = raw.seconds * 1000 + Math.floor((raw.nanoseconds || 0) / 1e6);
+      if (Number.isFinite(ms)) return ms;
+    }
+    if (raw instanceof Date) {
+      const ms = raw.getTime();
+      if (Number.isFinite(ms)) return ms;
+    }
+    if (typeof raw === "number" && Number.isFinite(raw)) {
+      return raw;
+    }
+    if (typeof raw === "string") {
+      const parsed = Date.parse(raw);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+  }
+
+  // Safe fallback: scheduled event date / due timestamp
+  const due = getEventDueTimestamp(event.date, event.time);
+  if (Number.isFinite(due)) return due;
+
+  if (event.date) {
+    const parsedDate = Date.parse(event.date);
+    if (Number.isFinite(parsedDate)) return parsedDate;
+  }
+
+  return 0;
+}
+
+function sortEvents(events) {
+  const list = [];
+  if (Array.isArray(events)) {
+    for (let i = 0; i < events.length; i++) list.push(events[i]);
+  } else if (events && typeof events.forEach === "function") {
+    events.forEach((d) => {
+      const data = typeof d.data === "function" ? d.data() : d;
+      list.push({ id: d.id, ...data });
+    });
+  } else {
+    return [];
+  }
+
+  const activeEvents = [];
+  const endedEvents = [];
+
+  for (let i = 0; i < list.length; i++) {
+    const ev = list[i];
+    const isEnded = !!getEventDateStatus(ev.date, ev.time).ended;
+    if (isEnded) {
+      endedEvents.push(ev);
+    } else {
+      activeEvents.push(ev);
+    }
+  }
+
+  const compareByCreatedDesc = (a, b) => {
+    const ta = getEventCreatedTimestamp(a);
+    const tb = getEventCreatedTimestamp(b);
+    if (tb !== ta) return tb - ta;
+    return String(b.id || "").localeCompare(String(a.id || ""));
+  };
+
+  activeEvents.sort(compareByCreatedDesc);
+  endedEvents.sort(compareByCreatedDesc);
+
+  return activeEvents.concat(endedEvents);
 }
 
 function scheduleNextEventStatusRefresh(snapshot) {
@@ -2595,16 +2676,13 @@ async function renderDashboardAgenda() {
   const requestId = ++dashboardAgendaRequest;
 
   try {
-    const snap = await getDocs(
-      query(collection(db, "events"), orderBy("date", "asc")),
-    );
+    const snap = await getDocs(collection(db, "events"));
     if (requestId !== dashboardAgendaRequest) return;
 
-    const allUpcoming = [];
-    snap.forEach((eventDoc) => {
-      const data = { id: eventDoc.id, ...eventDoc.data() };
-      if (!getEventDateStatus(data.date, data.time).ended) allUpcoming.push(data);
-    });
+    const sortedEvents = sortEvents(snap);
+    const allUpcoming = sortedEvents.filter(
+      (data) => !getEventDateStatus(data.date, data.time).ended,
+    );
 
     const registered = allUpcoming.filter((eventItem) =>
       registeredEventIds.has(eventItem.id),
@@ -5084,7 +5162,7 @@ function eventCancelButtonHtml(onclickAttr, extraClass) {
 function renderPublicEvents() {
   const grid = document.getElementById("public-events-grid");
   if (!grid) return;
-  getDocs(query(collection(db, "events"), orderBy("date", "asc"))).then(
+  getDocs(collection(db, "events")).then(
     (snap) => {
       scheduleNextEventStatusRefresh(snap);
       if (snap.empty) {
@@ -5092,9 +5170,14 @@ function renderPublicEvents() {
           '<div class="col-span-full text-center py-10 bg-white rounded-md border shadow-sm"><p class="text-sm text-gray-500">No upcoming events.</p></div>';
         return;
       }
+      const sortedEvents = sortEvents(snap);
+      if (!sortedEvents.length) {
+        grid.innerHTML =
+          '<div class="col-span-full text-center py-10 bg-white rounded-md border shadow-sm"><p class="text-sm text-gray-500">No upcoming events.</p></div>';
+        return;
+      }
       let html = "";
-      snap.forEach((d) => {
-        const ev = d.data();
+      sortedEvents.forEach((ev) => {
         const esc = (t) => {
           const div = document.createElement("div");
           div.textContent = t || "";
@@ -5172,7 +5255,7 @@ function renderPublicEvents() {
 function renderEvents() {
   const grid = document.getElementById("events-grid");
   if (!grid) return;
-  getDocs(query(collection(db, "events"), orderBy("date", "asc"))).then(
+  getDocs(collection(db, "events")).then(
     (snap) => {
       scheduleNextEventStatusRefresh(snap);
       if (snap.empty) {
@@ -5180,10 +5263,15 @@ function renderEvents() {
           '<div class="col-span-full text-center py-16 bg-white rounded-md border shadow-sm"><p class="text-base text-gray-400">No upcoming events.</p></div>';
         return;
       }
+      const sortedEvents = sortEvents(snap);
+      if (!sortedEvents.length) {
+        grid.innerHTML =
+          '<div class="col-span-full text-center py-16 bg-white rounded-md border shadow-sm"><p class="text-base text-gray-400">No upcoming events.</p></div>';
+        return;
+      }
       let html = "";
-      snap.forEach((d) => {
-        const ev = d.data(),
-          id = d.id;
+      sortedEvents.forEach((ev) => {
+        const id = ev.id;
         const esc = (t) => {
           const div = document.createElement("div");
           div.textContent = t || "";
@@ -5279,15 +5367,25 @@ function renderMyEvents() {
       '<div class="col-span-full text-center py-16 bg-white rounded-md border shadow-sm"><p class="text-base text-gray-400">No registered events.</p></div>';
     return;
   }
-  getDocs(query(collection(db, "events"), orderBy("date", "asc"))).then(
+  getDocs(collection(db, "events")).then(
     (snap) => {
-      let html = "",
-        found = false;
+      const myEvents = [];
       snap.forEach((d) => {
-        const ev = d.data(),
-          id = d.id;
+        const id = d.id;
         if (!registeredEventIds.has(id) && !completedEventIds.has(id)) return;
-        found = true;
+        myEvents.push({ id: d.id, ...d.data() });
+      });
+
+      if (!myEvents.length) {
+        grid.innerHTML =
+          '<div class="col-span-full text-center py-16 bg-white rounded-md border shadow-sm"><p class="text-base text-gray-400">No active records.</p></div>';
+        return;
+      }
+
+      const sortedEvents = sortEvents(myEvents);
+      let html = "";
+      sortedEvents.forEach((ev) => {
+        const id = ev.id;
         const esc = (t) => {
           const div = document.createElement("div");
           div.textContent = t || "";
@@ -5364,9 +5462,7 @@ function renderMyEvents() {
           : `<div class="relative h-32 bg-gradient-to-br ${pg} flex items-center justify-center overflow-hidden ${dateStatus.ended ? "grayscale" : ""}"><i class="fa-solid ${ti} text-white/30 text-5xl"></i><div class="absolute top-2 left-2"><span class="inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider event-type-badge text-white px-2 py-0.5 rounded-full"><i class="fa-solid ${ti} text-[#F2A900] text-[9px]"></i><span>${ev.type || "Event"}</span></span></div>${dateBadge ? `<div class="absolute top-2 right-2">${dateBadge}</div>` : ""}</div>`;
         html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${ev.date || "TBA"}','${ev.time ? formatTimeDisplay(ev.time) : ""}','${esc(ev.location)}','${esc(ev.desc || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-1 leading-snug flex-1 mr-2">${ev.title || "Untitled Event"}</h3>${sb}</div><div class="space-y-1.5"><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-calendar text-[#D49300] w-4"></i><span class="font-semibold text-[#353535]">${ev.date || "TBA"}</span>${ev.time ? `<span class="font-medium text-[#353535]">| ${formatTimeDisplay(ev.time)}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-location-dot text-[#D49300] w-4"></i><span class="font-semibold text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div>${cb ? `<div class="px-4 pb-4">${cb}</div>` : ""}</div>`;
       });
-      grid.innerHTML = found
-        ? html
-        : '<div class="col-span-full text-center py-16 bg-white rounded-md border shadow-sm"><p class="text-base text-gray-400">No active records.</p></div>';
+      grid.innerHTML = html;
     },
   );
 }
@@ -5508,11 +5604,14 @@ window.unregisterFromEvent = function (eid, et) {
 };
 
 eventsUnsubscribe = onSnapshot(
-  query(collection(db, "events"), orderBy("date", "asc")),
+  collection(db, "events"),
   () => {
     renderEvents();
     renderPublicEvents();
-    if (loggedInUser) renderDashboardAgenda();
+    if (loggedInUser) {
+      renderDashboardAgenda();
+      renderMyEvents();
+    }
   },
 );
 

@@ -61,18 +61,20 @@
 
 <body class="bg-white font-sans text-gray-800 antialiased">
     <!-- Page transition loading overlay -->
-    <div id="page-loading-overlay" class="page-loading-overlay active">
-        <div class="text-center px-6">
-            <div class="loading-spinner mx-auto"></div>
-            <p class="text-tsu-gold font-bold text-sm tracking-wider uppercase mt-5">
+    <div id="page-loading-overlay" class="page-loading-overlay active fixed inset-0 bg-[#001F3F]/95 backdrop-blur-md z-[9999] flex flex-col items-center justify-center">
+        <div class="flex flex-col items-center justify-center text-center px-6">
+            <div class="relative mb-5">
+                <div class="animate-spin rounded-full h-14 w-14 border-[3px] border-tsu-gold/25 border-t-tsu-gold"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fa-solid fa-building-columns text-tsu-gold text-lg"></i>
+                </div>
+            </div>
+            <p class="text-white font-bold text-sm tracking-wider uppercase">
                 Loading OneVictoria...
             </p>
-            <p class="text-gray-400 text-xs mt-2 font-medium">
+            <p class="text-gray-400 text-xs mt-1.5 font-medium">
                 Municipality of Victoria
             </p>
-            <div class="boot-progress mt-5 mx-auto" aria-hidden="true">
-                <div class="boot-progress-bar"></div>
-            </div>
         </div>
     </div>
     <script>
@@ -86,16 +88,21 @@
         }, 30000);
     </script>
     <div id="global-loading"
-        class="fixed inset-0 bg-gray-900/90 backdrop-blur-sm hidden flex flex-col items-center justify-center z-[200]">
-        <div class="relative">
-            <div class="animate-spin rounded-full h-16 w-16 border-[4px] border-gray-500/30 border-t-tsu-gold"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fa-solid fa-building-columns text-tsu-gold text-lg"></i>
+        class="fixed inset-0 bg-[#001F3F]/95 backdrop-blur-md hidden flex flex-col items-center justify-center z-[9999]">
+        <div class="flex flex-col items-center justify-center text-center px-6">
+            <div class="relative mb-5">
+                <div class="animate-spin rounded-full h-14 w-14 border-[3px] border-tsu-gold/25 border-t-tsu-gold"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fa-solid fa-building-columns text-tsu-gold text-lg"></i>
+                </div>
             </div>
+            <p id="loading-text" class="text-white font-bold tracking-wider text-sm uppercase">
+                Loading...
+            </p>
+            <p class="text-gray-400 text-xs mt-1.5 font-medium">
+                Municipality of Victoria
+            </p>
         </div>
-        <p id="loading-text" class="text-white font-semibold tracking-wide mt-5 text-sm uppercase">
-            Loading...
-        </p>
     </div>
     <!-- ===== AUTH SCREEN (shown when not logged in) ===== -->
     <div id="auth-screen"
@@ -236,9 +243,15 @@
                     </div>
                     <div id="public-announcements-container"
                         class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
-                        <div class="col-span-full text-center py-10 bg-white rounded-md border shadow-sm">
-                            <i class="fa-solid fa-spinner fa-spin text-2xl text-gray-300 mb-3"></i>
-                            <p class="text-sm text-gray-400">Loading announcements...</p>
+                        <div class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-md border border-gray-200 shadow-sm text-center">
+                            <div class="relative w-9 h-9 mb-3">
+                                <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading announcements...</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Please wait while we fetch the latest updates</p>
                         </div>
                     </div>
                 </section>
@@ -251,9 +264,15 @@
                     </div>
                     <div id="public-events-grid"
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-                        <div class="col-span-full text-center py-10 bg-white rounded-md border shadow-sm">
-                            <i class="fa-solid fa-spinner fa-spin text-2xl text-gray-300 mb-3"></i>
-                            <p class="text-sm text-gray-400">Loading events...</p>
+                        <div class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-md border border-gray-200 shadow-sm text-center">
+                            <div class="relative w-9 h-9 mb-3">
+                                <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading events...</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Please wait while we fetch the event schedule</p>
                         </div>
                     </div>
                 </section>
@@ -1040,9 +1059,14 @@
                                     </button>
                                 </div>
                                 <div id="dashboard-latest-announcements" class="divide-y divide-gray-100">
-                                    <div class="p-6 text-center text-gray-400">
-                                        <i class="fa-solid fa-spinner fa-spin"></i>
-                                        <p class="text-xs mt-2">Loading updates...</p>
+                                    <div class="flex flex-col items-center justify-center py-10 text-center">
+                                        <div class="relative w-8 h-8 mb-2.5">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs font-semibold text-gray-700">Loading updates...</p>
                                     </div>
                                 </div>
                             </article>
@@ -1060,9 +1084,14 @@
                                         </div>
                                     </div>
                                     <div id="dashboard-upcoming-events" class="p-4 space-y-3">
-                                        <div class="py-6 text-center text-gray-400">
-                                            <i class="fa-solid fa-spinner fa-spin"></i>
-                                            <p class="text-xs mt-2">Loading events...</p>
+                                        <div class="flex flex-col items-center justify-center py-10 text-center">
+                                            <div class="relative w-8 h-8 mb-2.5">
+                                                <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                                <div class="absolute inset-0 flex items-center justify-center">
+                                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-xs font-semibold text-gray-700">Loading events...</p>
                                         </div>
                                     </div>
                                     <div class="px-4 pb-4">
@@ -1303,7 +1332,18 @@
                         </div>
                         <!-- Static responsive announcement cards -->
                         <div id="announcement-card-grid-shell" class="w-full mt-4" aria-label="Community announcements">
-                            <div id="announcements-container" aria-live="polite"></div>
+                            <div id="announcements-container" aria-live="polite">
+                                <div class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-md border border-gray-200 shadow-sm text-center">
+                                    <div class="relative w-9 h-9 mb-3">
+                                        <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading announcements...</p>
+                                    <p class="text-[11px] text-gray-400 mt-1">Please wait while we fetch the latest updates</p>
+                                </div>
+                            </div>
                         </div>
                         <!-- Helpful context beneath the announcements -->
                         <div class="mt-7">
@@ -1361,6 +1401,16 @@
                         </div>
                     </div>
                     <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <div class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-md border border-gray-200 shadow-sm text-center">
+                            <div class="relative w-9 h-9 mb-3">
+                                <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading community events...</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Please wait while we fetch the event schedule</p>
+                        </div>
                     </div>
                 </section>
                 <section id="my-events" class="tab-content hidden">
@@ -1373,7 +1423,18 @@
                         </p>
                     </div>
                     <div id="my-events-grid"
-                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <div class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-md border border-gray-200 shadow-sm text-center">
+                            <div class="relative w-9 h-9 mb-3">
+                                <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading your registered events...</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Please wait while we retrieve your event passes</p>
+                        </div>
+                    </div>
                 </section>
                 <section id="notifications" class="tab-content hidden">
                     <div class="pb-5 mb-8 border-b-2 border-gray-200 flex items-center justify-between">
@@ -1393,9 +1454,15 @@
                     </div>
                     <div id="notifications-full-list"
                         class="max-w-2xl mx-auto bg-white rounded-md border border-gray-200 shadow-sm divide-y divide-gray-100 overflow-hidden">
-                        <div class="text-center py-10 text-gray-400">
-                            <i class="fa-solid fa-spinner fa-spin text-2xl mb-3"></i>
-                            <p class="text-sm">Loading notifications...</p>
+                        <div class="flex flex-col items-center justify-center py-12 text-center">
+                            <div class="relative w-9 h-9 mb-3">
+                                <div class="animate-spin rounded-full h-9 w-9 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-700 tracking-wide">Loading notifications...</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Retrieving your latest activity</p>
                         </div>
                     </div>
                 </section>
@@ -1582,10 +1649,16 @@
                                 </thead>
                                 <tbody id="user-volunteers-tbody" class="divide-y divide-gray-100">
                                     <tr>
-                                        <td colspan="5" class="text-center py-6 text-xs text-gray-400">
-                                            <i class="fa-solid fa-spinner fa-spin mr-1"></i>
-                                            Loading your volunteer
-                                            history...
+                                        <td colspan="5" class="py-10 text-center">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <div class="relative w-8 h-8 mb-2.5">
+                                                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <i class="fa-solid fa-building-columns text-[9px] text-tsu-gold"></i>
+                                                    </div>
+                                                </div>
+                                                <p class="text-xs font-medium text-gray-600">Loading your volunteer history...</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1632,7 +1705,21 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody id="user-hours-tbody" class="divide-y divide-gray-100"></tbody>
+                                    <tbody id="user-hours-tbody" class="divide-y divide-gray-100">
+                                        <tr>
+                                            <td colspan="3" class="py-10 text-center">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <div class="relative w-8 h-8 mb-2.5">
+                                                        <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                                        <div class="absolute inset-0 flex items-center justify-center">
+                                                            <i class="fa-solid fa-building-columns text-[9px] text-tsu-gold"></i>
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-xs font-medium text-gray-600">Loading service hours...</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -1792,7 +1879,21 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody id="public-donations-tbody" class="divide-y divide-gray-100"></tbody>
+                                        <tbody id="public-donations-tbody" class="divide-y divide-gray-100">
+                                            <tr>
+                                                <td colspan="4" class="py-10 text-center">
+                                                    <div class="flex flex-col items-center justify-center">
+                                                        <div class="relative w-8 h-8 mb-2.5">
+                                                            <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                                <i class="fa-solid fa-building-columns text-[9px] text-tsu-gold"></i>
+                                                            </div>
+                                                        </div>
+                                                        <p class="text-xs font-medium text-gray-600">Loading community donations...</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -1824,7 +1925,21 @@
                                             <th class="px-3 py-3.5 text-left sticky top-0 bg-gray-50">Date</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="user-donations-tbody" class="divide-y divide-gray-100"></tbody>
+                                    <tbody id="user-donations-tbody" class="divide-y divide-gray-100">
+                                        <tr>
+                                            <td colspan="4" class="py-10 text-center">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <div class="relative w-8 h-8 mb-2.5">
+                                                        <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                                                        <div class="absolute inset-0 flex items-center justify-center">
+                                                            <i class="fa-solid fa-building-columns text-[9px] text-tsu-gold"></i>
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-xs font-medium text-gray-600">Loading your donation history...</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -2055,9 +2170,14 @@
         </div>
         <div id="notification-dropdown-list" class="overflow-y-auto flex-1 divide-y divide-gray-50"
             style="max-height: 50vh">
-            <div class="text-center py-8 text-gray-400">
-                <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-                <p class="text-xs">Loading notifications...</p>
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="relative w-8 h-8 mb-2.5">
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                    </div>
+                </div>
+                <p class="text-xs font-medium text-gray-600">Loading notifications...</p>
             </div>
         </div>
         <div class="p-3 border-t border-gray-100 shrink-0">
@@ -2110,9 +2230,14 @@
         </div>
         <div id="mobile-notification-dropdown-list" class="overflow-y-auto flex-1 divide-y divide-gray-50"
             style="max-height: 50vh">
-            <div class="text-center py-8 text-gray-400">
-                <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-                <p class="text-xs">Loading notifications...</p>
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="relative w-8 h-8 mb-2.5">
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-tsu-blue/20 border-t-tsu-gold"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fa-solid fa-building-columns text-[10px] text-tsu-gold"></i>
+                    </div>
+                </div>
+                <p class="text-xs font-medium text-gray-600">Loading notifications...</p>
             </div>
         </div>
         <div class="p-3 border-t border-gray-100 shrink-0">
@@ -2475,7 +2600,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://mythird-partyapi.site.je/qr-sdk.js"></script>
     <script src="./user.js" type="module"></script>
-
 </body>
 
 </html>

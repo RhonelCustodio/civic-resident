@@ -424,7 +424,7 @@ td span.rounded-full {
 #page-loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(10, 41, 71, 0.95);
+    background: rgba(0, 31, 63, 0.95);
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
