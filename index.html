@@ -714,9 +714,6 @@
                                 <img id="sidebar-profile-pic" src="" alt="Profile"
                                     class="absolute inset-0 w-full h-full object-cover hidden">
                             </div>
-                            <span id="sidebar-username"
-                                class="text-[12px] font-semibold hidden md:block truncate max-w-[220px] cursor-pointer"
-                                onclick="switchTab('profile')" title="Profile Settings">Resident</span>
                             <button type="button" onclick="triggerLogoutConfirmation()"
                                 class="text-gray-400 hover:text-red-400 p-2 rounded-md transition-colors hidden md:block"
                                 title="Sign Out">
@@ -2259,13 +2256,18 @@
     <!-- Modals -->
     <div id="view-event-modal" onclick="if (event.target === this) toggleModal('view-event-modal');"
         class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-lg max-w-lg w-full p-8 shadow-2xl border border-gray-200 modal-enter relative">
+        <div class="bg-white rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-200 modal-enter relative max-h-[90vh] overflow-y-auto">
             <button type="button" onclick="toggleModal('view-event-modal')"
-                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" aria-label="Close modal">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h2 id="modal-event-title" class="text-2xl font-extrabold text-tsu-blue mb-3 pr-8"></h2>
-            <div class="space-y-3 my-5 text-sm bg-gray-50 p-5 rounded-md">
+            <h2 id="modal-event-title" class="text-2xl font-extrabold text-tsu-blue mb-4 pr-8"></h2>
+            <div id="modal-event-image-container"
+                class="hidden mb-4 rounded-md overflow-hidden border border-gray-200 bg-gray-100 max-h-64 sm:max-h-72 text-center">
+                <img id="modal-event-image" src="" alt="Event Image" loading="lazy" decoding="async"
+                    class="w-full h-auto max-h-64 sm:max-h-72 object-cover mx-auto">
+            </div>
+            <div class="space-y-3 my-4 text-sm bg-gray-50 p-5 rounded-md">
                 <p id="modal-event-date" class="flex items-center">
                     <i class="fa-solid fa-calendar mr-2.5 text-tsu-blue text-base"></i>
                 </p>
@@ -2273,11 +2275,11 @@
                     <i class="fa-solid fa-location-dot mr-2.5 text-tsu-blue text-base"></i>
                 </p>
             </div>
-            <p id="modal-event-desc" class="text-base mb-0 leading-relaxed"></p>
+            <p id="modal-event-desc" class="text-base mb-0 leading-relaxed whitespace-pre-line"></p>
         </div>
     </div>
     <div id="custom-alert"
-        class="fixed bottom-5 right-5 z-[200] max-w-sm w-full bg-white rounded-lg shadow-2xl border border-gray-200 p-5 transform translate-x-96 opacity-0 transition-all">
+        class="fixed bottom-5 right-5 z-[300] max-w-sm w-full bg-white rounded-lg shadow-2xl border border-gray-200 p-5 transform translate-x-96 opacity-0 transition-all">
         <div class="flex items-start space-x-3.5">
             <div id="alert-icon-box" class="p-2.5 rounded-md text-white shrink-0">
                 <i id="alert-icon" class="fa-solid text-lg"></i>
@@ -2295,7 +2297,7 @@
         </div>
     </div>
     <div id="confirm-modal"
-        class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[150]">
+        class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[250]">
         <div class="bg-white rounded-lg max-w-sm w-full p-7 border border-gray-200 text-center modal-enter">
             <div
                 class="w-14 h-14 bg-amber-50 text-amber-500 rounded-lg flex items-center justify-center mx-auto mb-5 text-xl">

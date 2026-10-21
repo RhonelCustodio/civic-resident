@@ -2932,6 +2932,7 @@ async function renderDashboardAgenda() {
             eventItem.time ? formatTimeDisplay(eventItem.time) : "",
             eventItem.location || "TBA",
             eventItem.desc || eventItem.description || "",
+            eventItem.imageUrl || "",
           );
         });
       });
@@ -5502,7 +5503,7 @@ function renderPublicEvents() {
           : eventJoinButtonHtml(
             "window.showAlert('Authentication Required','Please log in or create an account to join community events.','error')",
           );
-        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${dd}','${td}','${esc(ev.location)}','${esc(ev.desc || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-2 leading-snug mb-2">${ev.title || "Untitled Event"}</h3><div class="space-y-2"><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-calendar text-[#D49300] w-4"></i><span class="font-semibold text-[#353535]">${dd}</span>${td ? `<span class="font-medium text-[#353535]">| ${td}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-location-dot text-[#D49300] w-4"></i><span class="font-semibold text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div><div class="px-4 pb-4 pt-3 border-t border-gray-100 mt-auto">${ab}</div></div>`;
+        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${dd}','${td}','${esc(ev.location)}','${esc(ev.desc || "")}','${esc(ev.imageUrl || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-2 leading-snug mb-2">${ev.title || "Untitled Event"}</h3><div class="space-y-2"><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-calendar text-[#D49300] w-4"></i><span class="font-semibold text-[#353535]">${dd}</span>${td ? `<span class="font-medium text-[#353535]">| ${td}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-location-dot text-[#D49300] w-4"></i><span class="font-semibold text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div><div class="px-4 pb-4 pt-3 border-t border-gray-100 mt-auto">${ab}</div></div>`;
       });
       grid.innerHTML = html;
     },
@@ -5606,7 +5607,7 @@ function renderEvents() {
           ab = eventJoinButtonHtml(
             `handleRegisterClick(event,'${id}','${esc(ev.title)}','${dd}','${td}','${esc(ev.location)}')`,
           );
-        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${dd}','${td}','${esc(ev.location)}','${esc(ev.desc || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-2 leading-snug mb-2">${ev.title || "Untitled Event"}</h3><div class="space-y-2"><div class="flex items-center space-x-1.5 text-xs text-[#353535]-500"><i class="fa-solid fa-calendar text-[#353535] w-4"></i><span class="font-medium text-[#353535]">${dd}</span>${td ? `<span class="text-[#353535]-800">| ${td}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-gray-500"><i class="fa-solid fa-location-dot text-[#353535] w-4"></i><span class="font-medium text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div><div class="px-4 pb-4 pt-3 border-t border-gray-100 mt-auto">${ab}</div></div>`;
+        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${dd}','${td}','${esc(ev.location)}','${esc(ev.desc || "")}','${esc(ev.imageUrl || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-2 leading-snug mb-2">${ev.title || "Untitled Event"}</h3><div class="space-y-2"><div class="flex items-center space-x-1.5 text-xs text-[#353535]-500"><i class="fa-solid fa-calendar text-[#353535] w-4"></i><span class="font-medium text-[#353535]">${dd}</span>${td ? `<span class="text-[#353535]-800">| ${td}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-gray-500"><i class="fa-solid fa-location-dot text-[#353535] w-4"></i><span class="font-medium text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div><div class="px-4 pb-4 pt-3 border-t border-gray-100 mt-auto">${ab}</div></div>`;
       });
       grid.innerHTML = html;
     },
@@ -5717,7 +5718,7 @@ function renderMyEvents() {
         const is = hi
           ? `<div class="relative h-32 overflow-hidden"><img src="${ev.imageUrl}" alt="${esc(ev.title)}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none ${dateStatus.ended ? "grayscale" : ""}"><div class="absolute top-2 left-2"><span class="inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider event-type-badge text-white px-2 py-0.5 rounded-full"><i class="fa-solid ${ti} text-[#F2A900] text-[9px]"></i><span>${ev.type || "Event"}</span></span></div>${dateBadge ? `<div class="absolute top-2 right-2">${dateBadge}</div>` : ""}</div>`
           : `<div class="relative h-32 bg-gradient-to-br ${pg} flex items-center justify-center overflow-hidden ${dateStatus.ended ? "grayscale" : ""}"><i class="fa-solid ${ti} text-white/30 text-5xl"></i><div class="absolute top-2 left-2"><span class="inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider event-type-badge text-white px-2 py-0.5 rounded-full"><i class="fa-solid ${ti} text-[#F2A900] text-[9px]"></i><span>${ev.type || "Event"}</span></span></div>${dateBadge ? `<div class="absolute top-2 right-2">${dateBadge}</div>` : ""}</div>`;
-        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${ev.date || "TBA"}','${ev.time ? formatTimeDisplay(ev.time) : ""}','${esc(ev.location)}','${esc(ev.desc || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-1 leading-snug flex-1 mr-2">${ev.title || "Untitled Event"}</h3>${sb}</div><div class="space-y-1.5"><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-calendar text-[#D49300] w-4"></i><span class="font-semibold text-[#353535]">${ev.date || "TBA"}</span>${ev.time ? `<span class="font-medium text-[#353535]">| ${formatTimeDisplay(ev.time)}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-location-dot text-[#D49300] w-4"></i><span class="font-semibold text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div>${cb ? `<div class="px-4 pb-4">${cb}</div>` : ""}</div>`;
+        html += `<div class="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col${endedCardClass}"><div onclick="openEventDetails('${esc(ev.title)}','${ev.date || "TBA"}','${ev.time ? formatTimeDisplay(ev.time) : ""}','${esc(ev.location)}','${esc(ev.desc || "")}','${esc(ev.imageUrl || "")}')" class="cursor-pointer group">${is}<div class="p-4 pb-2"><div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-gray-900 group-hover:text-[#F2A900] transition-colors line-clamp-1 leading-snug flex-1 mr-2">${ev.title || "Untitled Event"}</h3>${sb}</div><div class="space-y-1.5"><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-calendar text-[#D49300] w-4"></i><span class="font-semibold text-[#353535]">${ev.date || "TBA"}</span>${ev.time ? `<span class="font-medium text-[#353535]">| ${formatTimeDisplay(ev.time)}</span>` : ""}</div><div class="flex items-center space-x-1.5 text-xs text-[#353535]"><i class="fa-solid fa-location-dot text-[#D49300] w-4"></i><span class="font-semibold text-[#353535] truncate">${ev.location || "TBA"}</span></div></div></div></div>${cb ? `<div class="px-4 pb-4">${cb}</div>` : ""}</div>`;
       });
       grid.innerHTML = html;
     },
@@ -6395,11 +6396,13 @@ window.switchTab = function (tabId) {
   }, 600);
 };
 
-window.openEventDetails = function (title, date, time, location, desc) {
+window.openEventDetails = function (title, date, time, location, desc, imageUrl) {
   const mT = document.getElementById("modal-event-title"),
     mD = document.getElementById("modal-event-date"),
     mL = document.getElementById("modal-event-location"),
-    mDesc = document.getElementById("modal-event-desc");
+    mDesc = document.getElementById("modal-event-desc"),
+    mImg = document.getElementById("modal-event-image"),
+    mImgContainer = document.getElementById("modal-event-image-container");
   if (mT) mT.innerText = title;
   let dd = `Date: ${date || "TBA"}`;
   if (time) dd += ` at ${time}`;
@@ -6409,9 +6412,26 @@ window.openEventDetails = function (title, date, time, location, desc) {
   if (mL)
     mL.innerHTML = `<i class="fa-solid fa-location-dot mr-1.5"></i>Location: ${location || "TBA"}`;
   if (mDesc) mDesc.innerHTML = desc;
+
+  if (mImg && mImgContainer) {
+    const safeUrl = String(imageUrl || "").trim();
+    if (safeUrl) {
+      mImg.alt = title ? `${title} Image` : "Event Image";
+      mImg.onerror = function () {
+        mImgContainer.classList.add("hidden");
+        this.removeAttribute("src");
+      };
+      mImg.src = safeUrl;
+      mImgContainer.classList.remove("hidden");
+    } else {
+      mImgContainer.classList.add("hidden");
+      mImg.removeAttribute("src");
+      mImg.alt = "";
+    }
+  }
+
   window.toggleModal("view-event-modal");
 };
-
 window.toggleModal = function (modalId) {
   const modal = document.getElementById(modalId);
   if (modal) modal.classList.toggle("hidden");
