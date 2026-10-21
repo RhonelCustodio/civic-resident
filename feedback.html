@@ -7,7 +7,7 @@
   <meta name="description"
     content="Send feedback to the OneVictoria Resident Hub — suggestions, bugs, and compliments for the Municipality of Victoria, Tarlac." />
   <title>Feedback · OneVictoria</title>
-  <link rel="shortcut icon" href="./src/assets/gemini-svg (1).svg" type="image/x-icon" />
+  <link rel="shortcut icon" href="./src/assets/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -55,6 +55,12 @@
       line-height: 1.6;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      /* The header is fixed (same as privacy-policy.html), so offset the page. */
+      padding-top: var(--header-h);
+      /* Flex column + mt-auto on the footer keeps it pinned to the bottom on
+         short pages, exactly like privacy-policy.html's `min-h-screen flex flex-col`. */
+      display: flex;
+      flex-direction: column;
     }
 
     a {
@@ -75,10 +81,12 @@
       outline-offset: 2px;
     }
 
-    /* ===== Header: matches index.html public navbar ===== */
+    /* ===== Header: matches privacy-policy.html ===== */
     header.app {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 40;
       height: var(--header-h);
       background: rgba(255, 255, 255, .95);
@@ -90,14 +98,14 @@
     }
 
     .app-inner {
-      max-width: 1120px;
+      max-width: 1280px;
       margin: 0 auto;
       height: 100%;
       padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
     }
 
     .brand {
@@ -111,26 +119,31 @@
       overflow: hidden;
     }
 
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+
+    .brand-logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text {
+      display: block;
+      text-align: left;
+      min-width: 0;
+    }
+
     .brand:hover {
       color: var(--blue);
       text-decoration: none;
-    }
-
-    .seal {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--blue), var(--dark));
-      display: grid;
-      place-items: center;
-      flex: none;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
-    }
-
-    .seal svg {
-      width: 16px;
-      height: 16px;
-      fill: var(--gold);
     }
 
     .brand-name {
@@ -142,6 +155,7 @@
     }
 
     .brand-sub {
+      display: none;
       font-size: 9px;
       font-weight: 700;
       letter-spacing: .12em;
@@ -150,27 +164,34 @@
       margin-top: 4px;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: none;
+      margin-left: auto;
+    }
+
     .back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       flex: none;
-      margin-left: auto;
       white-space: nowrap;
-      padding: 9px 18px;
-      border-radius: 10px;
+      padding: 8px 16px;
+      border-radius: 2px;
       background: var(--gold);
-      color: var(--dark);
+      color: #fff;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
       text-decoration: none;
       box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
-      transition: background .18s ease;
+      transition: background .18s ease, color .18s ease;
     }
 
     .back:hover {
       background: var(--gold-light);
-      color: var(--dark);
+      color: #fff;
       text-decoration: none;
     }
 
@@ -187,8 +208,10 @@
     /* ===== Layout ===== */
     .wrap {
       max-width: 880px;
+      width: 100%;
       margin: 0 auto;
-      padding: 28px 16px 56px;
+      padding: 28px 16px 40px;
+      flex: 1 0 auto;
     }
 
     .doc {
@@ -287,7 +310,7 @@
       cursor: pointer;
       padding: 3px;
       line-height: 0;
-      border-radius: 8px;
+      border-radius: 4px;
       transition: transform .15s ease;
     }
 
@@ -329,7 +352,7 @@
       padding: 14px;
       border: 1.5px solid var(--border);
       background: var(--surface);
-      border-radius: 14px;
+      border-radius: 4px;
       cursor: pointer;
       font-family: inherit;
       transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .12s ease;
@@ -350,7 +373,7 @@
     .type .ico {
       width: 38px;
       height: 38px;
-      border-radius: 11px;
+      border-radius: 4px;
       display: grid;
       place-items: center;
       flex: none;
@@ -392,7 +415,7 @@
       color: var(--ink);
       background: var(--surface);
       border: 1.5px solid var(--border);
-      border-radius: 12px;
+      border-radius: 4px;
       padding: 11px 14px;
       transition: border-color .18s ease, box-shadow .18s ease;
     }
@@ -447,7 +470,7 @@
     /* ===== Upload ===== */
     .drop {
       border: 1.5px dashed #C6D2E0;
-      border-radius: 14px;
+      border-radius: 4px;
       background: var(--surface-2);
       padding: 26px 18px;
       text-align: center;
@@ -493,7 +516,7 @@
       position: relative;
       width: 96px;
       border: 1px solid var(--border);
-      border-radius: 11px;
+      border-radius: 4px;
       padding: 8px;
       background: var(--surface);
       box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
@@ -503,7 +526,7 @@
       width: 100%;
       height: 60px;
       object-fit: cover;
-      border-radius: 7px;
+      border-radius: 4px;
       display: block;
     }
 
@@ -530,7 +553,7 @@
       background: var(--danger-bg);
       color: var(--danger);
       font-weight: 800;
-      border-radius: 8px;
+      border-radius: 4px;
       transition: filter .15s ease;
     }
 
@@ -567,7 +590,7 @@
       line-height: 1.55;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 4px;
       padding: 14px 15px;
     }
 
@@ -589,7 +612,7 @@
       color: var(--dark);
       background: var(--gold);
       border: none;
-      border-radius: 12px;
+      border-radius: 4px;
       padding: 15px;
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(242, 169, 0, .28);
@@ -609,37 +632,106 @@
       box-shadow: none;
     }
 
-    /* ===== Footer ===== */
+    /* ===== Footer: matches privacy-policy.html ===== */
     footer.site {
-      margin-top: 26px;
-      padding-top: 22px;
+      margin-top: auto;
+      background: #F9FAFB;
       border-top: 1px solid var(--border);
+      flex: none;
+    }
+
+    .footer-inner {
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .footer-brand {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 11.5px;
-      color: var(--muted);
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
-    .links {
-      display: flex;
-      gap: 18px;
-      font-weight: 700;
+    .footer-brand img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
     }
 
-    .links a {
-      color: var(--muted);
-    }
-
-    .links a:hover {
-      color: var(--blue);
-    }
-
-    .links .here {
-      color: var(--blue);
+    .footer-brand span {
       font-weight: 800;
+      font-size: 14px;
+      color: var(--blue);
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      color: #6B7280;
+      line-height: 1.625;
+      margin: 0;
+    }
+
+    .footer-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #1F2937;
+      margin: 0 0 12px;
+    }
+
+    .footer-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+      color: #6B7280;
+    }
+
+    .footer-list li {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-list a {
+      color: #6B7280;
+      text-decoration: none;
+      transition: color .18s ease;
+    }
+
+    .footer-list a:hover {
+      color: var(--blue);
+    }
+
+    /* Inline SVG icons stand in for FontAwesome, which this page does not load. */
+    .footer-list svg {
+      width: 13px;
+      height: 13px;
+      margin-right: 8px;
+      flex: none;
+      fill: var(--blue);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+      padding-top: 24px;
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+      font-size: 12px;
+      color: #9CA3AF;
     }
 
     /* ===== Success modal ===== */
@@ -662,7 +754,7 @@
 
     .modal {
       background: var(--surface);
-      border-radius: 20px;
+      border-radius: 4px;
       padding: 36px 30px 30px;
       max-width: 400px;
       width: 100%;
@@ -733,7 +825,7 @@
       color: #fff;
       background: var(--blue);
       border: none;
-      border-radius: 11px;
+      border-radius: 4px;
       padding: 13px;
       cursor: pointer;
       transition: background .18s ease;
@@ -767,14 +859,6 @@
         padding: 18px 12px 44px;
       }
 
-      .brand-sub {
-        display: none;
-      }
-
-      footer.site {
-        justify-content: center;
-        text-align: center;
-      }
     }
 
     @media (max-width: 380px) {
@@ -782,29 +866,62 @@
         display: none;
       }
     }
+    @media (min-width: 640px) {
+      .app-inner {
+        padding: 0 24px;
+        gap: 16px;
+      }
+
+      .brand-sub {
+        display: block;
+      }
+
+      .back {
+        padding: 8px 20px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .app-inner {
+        padding: 0 32px;
+      }
+
+      .footer-inner {
+        padding: 32px 40px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Header: identical to privacy-policy.html (logo.png + OneVictoria / Resident Hub
+       + gold "Back to Home"). Written with this page's local CSS instead of Tailwind
+       so feedback.html stays dependency-free and renders the same offline. -->
   <header class="app">
     <div class="app-inner">
-      <a class="brand" href="index.html">
-        <div class="seal" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M4 10l8-6 8 6v10H4V10zm8 1a3 3 0 100 6 3 3 0 000-6z" />
+      <a class="brand" href="index.html" aria-label="OneVictoria home">
+        <span class="brand-logo">
+          <img src="./src/assets/logo.png" alt="OneVictoria Logo">
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">OneVictoria</span>
+          <span class="brand-sub">Resident Hub</span>
+        </span>
+      </a>
+      <div class="header-actions">
+        <a class="back" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
           </svg>
-        </div>
-        <div>
-          <div class="brand-name">OneVictoria</div>
-          <div class="brand-sub">Resident Hub</div>
-        </div>
-      </a>
-      <a class="back" href="/index.html">
-        <svg viewBox="0 0 24 24">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        <span>Back to Hub</span>
-      </a>
+          <span>Back to Home</span>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -949,16 +1066,63 @@
       </form>
     </article>
 
-    <footer class="site">
-      <p>© 2026 Municipality of Victoria. All rights reserved.</p>
-      <nav class="links" aria-label="Legal">
-        <a href="privacy-policy.html">Privacy</a>
-        <a href="terms-of-service.html">Terms</a>
-        <a href="help-center.html">Help</a>
-        <span class="here">Feedback</span>
-      </nav>
-    </footer>
   </div>
+
+  <!-- Footer: identical to privacy-policy.html. Two deliberate differences:
+       1. Local CSS + inline SVG icons instead of Tailwind/FontAwesome, so this
+          page keeps rendering correctly with no external dependencies.
+       2. The email is written in plain text. privacy-policy.html uses a
+          Cloudflare-obfuscated `data-cfemail` token that only decodes when
+          Cloudflare's email-decode.min.js runs - copying it verbatim here would
+          leave visitors with a dead "[email protected]" link. -->
+  <footer class="site">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <img src="./src/assets/logo.png" alt="OneVictoria Logo">
+            <span>OneVictoria</span>
+          </div>
+          <p class="footer-tagline">Your gateway to community engagement.</p>
+        </div>
+        <div>
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-list">
+            <li><a href="privacy-policy.html">Privacy</a></li>
+            <li><a href="terms-of-service.html">Terms</a></li>
+            <li><a href="help-center.html">Help</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-list">
+            <li>
+              <svg viewBox="0 0 384 512" aria-hidden="true">
+                <path d="M215.7 499.2C267 435 384 279.4 384 192 384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2 12.3 15.3 35.1 15.3 47.4 0zM192 256c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z" />
+              </svg>
+              Victoria, Philippines
+            </li>
+            <li>
+              <svg viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+              </svg>
+              <a href="mailto:support@onevictoria.gov.ph">support@onevictoria.gov.ph</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 512 512" aria-hidden="true">
+                <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z" />
+              </svg>
+              +63 (02) 1234-5678
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Municipality of Victoria. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
   <div id="feedback-success" class="overlay" role="dialog" aria-modal="true" aria-labelledby="success-title">
     <div class="modal">
