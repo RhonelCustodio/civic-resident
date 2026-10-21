@@ -2051,10 +2051,10 @@
                                     <input type="password" id="prof-password"
                                         class="w-full border border-gray-200 rounded-sm p-2.5 pr-9 text-sm focus:ring-2 focus:ring-tsu-blue/20 focus:border-tsu-blue"
                                         placeholder="New password">
-                                    <button type="button" id="toggle-prof-password" data-pw-toggle="prof-password"
+                                    <button type="button" id="toggle-prof-password" onclick="window.toggleProfPassword()"
                                         aria-pressed="false" aria-label="Show password"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-tsu-blue">
-                                        <i id="prof-password-icon" data-pw-toggle-icon
+                                        <i id="prof-password-icon"
                                             class="fa-solid fa-eye text-sm"></i>
                                     </button>
                                 </div>
@@ -2273,11 +2273,7 @@
                     <i class="fa-solid fa-location-dot mr-2.5 text-tsu-blue text-base"></i>
                 </p>
             </div>
-            <p id="modal-event-desc" class="text-base mb-6 leading-relaxed"></p>
-            <button type="button" onclick="toggleModal('view-event-modal')"
-                class="w-full bg-gray-100 text-gray-600 font-semibold py-3 rounded-md text-base hover:bg-gray-200 transition-colors">
-                Close
-            </button>
+            <p id="modal-event-desc" class="text-base mb-0 leading-relaxed"></p>
         </div>
     </div>
     <div id="custom-alert"
@@ -2530,7 +2526,7 @@
                 </p>
             </div>
             <div id="modal-announcement-content"
-                class="grid grid-cols-1 md:grid-cols-2 grid-rows-[minmax(0,1fr)_auto] md:grid-rows-1 gap-5 flex-1 min-h-0 mb-5 overflow-hidden">
+                class="grid grid-cols-1 md:grid-cols-2 grid-rows-[minmax(0,1fr)_auto] md:grid-rows-1 gap-5 flex-1 min-h-0 mb-0 overflow-hidden">
                 <div id="modal-announcement-text-panel"
                     class="md:col-span-2 bg-gray-50 p-5 rounded-md overflow-y-auto min-h-0 custom-scrollbar">
                     <p id="modal-announcement-desc" class="text-base leading-relaxed whitespace-pre-line"></p>
@@ -2541,47 +2537,55 @@
                         class="max-w-full h-auto max-h-40 md:max-h-80 object-contain mx-auto" alt="" decoding="async">
                 </div>
             </div>
-            <button type="button" onclick="toggleModal('view-announcement-modal')"
-                class="w-full bg-gray-100 text-gray-600 font-semibold py-3 rounded-md text-base hover:bg-gray-200 transition-colors shrink-0">
-                Close
-            </button>
         </div>
     </div>
     <div id="notification-detail-modal"
         class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[160]"
         onclick="if (event.target === this) closeNotificationDetail();">
-        <div class="bg-white rounded-lg max-w-lg w-full shadow-2xl border border-gray-200 modal-enter overflow-hidden">
-            <div class="p-6 border-b border-gray-100">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-gray-100 modal-enter overflow-hidden flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-6 pb-4 border-b border-gray-100">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3.5 min-w-0">
                         <div id="notif-detail-icon"
-                            class="w-12 h-12 rounded-full flex items-center justify-center shadow-md">
-                            <i id="notif-detail-icon-inner" class="fa-solid text-lg"></i>
+                            class="w-11 h-11 rounded-xl flex items-center justify-center shadow-sm shrink-0 bg-blue-50 text-blue-600 border border-blue-100/60 mt-0.5">
+                            <i id="notif-detail-icon-inner" class="fa-solid fa-bell text-base"></i>
                         </div>
-                        <div>
-                            <h3 id="notif-detail-title" class="text-lg font-extrabold text-gray-900"></h3>
-                            <p id="notif-detail-time" class="text-xs text-gray-500 mt-0.5 flex items-center">
-                                <i class="fa-solid fa-clock mr-1"></i>
+                        <div class="min-w-0 flex-1">
+                            <h3 id="notif-detail-title" class="text-base sm:text-lg font-bold text-gray-900 leading-snug break-words"></h3>
+                            <p id="notif-detail-time" class="text-xs text-gray-400 mt-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-clock text-[10px]"></i> Just now
                             </p>
                         </div>
                     </div>
-                    <button onclick="closeNotificationDetail()"
-                        class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-md transition-all">
-                        <i class="fa-solid fa-xmark text-xl"></i>
+                    <button type="button" onclick="closeNotificationDetail()"
+                        class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center transition-all shrink-0 -mr-1"
+                        aria-label="Close notification modal">
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
-                <div id="notif-detail-badge" class="mt-4"></div>
             </div>
-            <div class="p-6">
-                <div class="bg-gray-50 rounded-md p-5 border border-gray-100">
-                    <p id="notif-detail-message" class="text-sm text-gray-700 leading-relaxed whitespace-pre-line"></p>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+                <div class="bg-gray-50/70 rounded-xl p-4 sm:p-5 border border-gray-100">
+                    <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-gray-200/50">
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-regular fa-comment-dots text-gray-400"></i> Notification Details
+                        </span>
+                        <span class="text-[11px] text-gray-400">OneVictoria Hub</span>
+                    </div>
+                    <p id="notif-detail-message" class="text-sm text-gray-700 leading-relaxed whitespace-pre-line break-words"></p>
                 </div>
-                <div id="notif-detail-actions" class="mt-5 space-y-3"></div>
+                <div id="notif-detail-actions"></div>
             </div>
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                <button onclick="closeNotificationDetail()"
-                    class="text-sm text-gray-600 font-semibold hover:text-gray-800 transition-colors flex items-center space-x-1"></button>
-                <span class="text-xs text-gray-400">OneVictoria Notification</span>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                <span class="flex items-center gap-1.5 text-[11px]">
+                    <i class="fa-solid fa-shield-halved text-gray-400"></i> Official Notice
+                </span>
+                <span class="text-[11px] text-gray-400">Resident Portal</span>
             </div>
         </div>
     </div>

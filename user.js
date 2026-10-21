@@ -255,6 +255,8 @@ let notificationCount = 0,
   allNotifications = [],
   showingAllNotifications = false;
 let mobileShowingAllNotifications = false;
+let activeNotificationId = null;
+const pendingDeleteIds = new Set();
 let accountStatusUnsubscribe = null;
 let forcedLogoutInProgress = false;
 let sessionCheckInterval = null,
@@ -1663,41 +1665,58 @@ window.openNotificationDetail = function (notifId, type, title, message, time) {
   document.getElementById("notif-detail-title").textContent =
     title || "Notification";
   document.getElementById("notif-detail-time").innerHTML =
-    `<i class="fa-solid fa-clock mr-1"></i>${time || "Just now"}`;
+    `<i class="fa-solid fa-clock text-[10px] mr-1"></i>${time || "Just now"}`;
   document.getElementById("notif-detail-message").textContent = message || "";
   const iconContainer = document.getElementById("notif-detail-icon");
   const iconInner = document.getElementById("notif-detail-icon-inner");
-  let bgClass = "bg-blue-100",
-    iconClass = "fa-bell text-blue-600";
+
+  let bgClass = "bg-blue-50 text-blue-600 border border-blue-100/80",
+    iconClass = "fa-bell";
+
   switch (type) {
     case "volunteer_approved":
-      bgClass = "bg-emerald-100";
-      iconClass = "fa-circle-check text-emerald-600";
+      bgClass = "bg-emerald-50 text-emerald-600 border border-emerald-100/80";
+      iconClass = "fa-circle-check";
       break;
     case "volunteer_rejected":
-      bgClass = "bg-red-100";
-      iconClass = "fa-circle-xmark text-red-600";
+      bgClass = "bg-red-50 text-red-600 border border-red-100/80";
+      iconClass = "fa-circle-xmark";
       break;
     case "donation_confirmed":
-      bgClass = "bg-emerald-100";
-      iconClass = "fa-circle-check text-emerald-600";
+      bgClass = "bg-emerald-50 text-emerald-600 border border-emerald-100/80";
+      iconClass = "fa-circle-check";
       break;
     case "donation_rejected":
-      bgClass = "bg-red-100";
-      iconClass = "fa-circle-xmark text-red-600";
+      bgClass = "bg-red-50 text-red-600 border border-red-100/80";
+      iconClass = "fa-circle-xmark";
       break;
     case "hours_credited":
-      bgClass = "bg-purple-100";
-      iconClass = "fa-clock text-purple-600";
+      bgClass = "bg-purple-50 text-purple-600 border border-purple-100/80";
+      iconClass = "fa-clock";
       break;
     case "contact_status_update":
+      bgClass = "bg-indigo-50 text-indigo-600 border border-indigo-100/80";
+      iconClass = "fa-envelope-circle-check";
+      break;
     case "feedback_status":
-      bgClass = "bg-indigo-100";
-      iconClass = "fa-envelope-circle-check text-indigo-600";
+      bgClass = "bg-indigo-50 text-indigo-600 border border-indigo-100/80";
+      iconClass = "fa-envelope-circle-check";
       break;
   }
-  iconContainer.className = `w-12 h-12 rounded-full flex items-center justify-center shadow-md ${bgClass}`;
-  iconInner.className = `fa-solid ${iconClass} text-lg`;
+
+  if (iconContainer) {
+    iconContainer.className = `w-11 h-11 rounded-xl flex items-center justify-center shadow-sm shrink-0 mt-0.5 ${bgClass}`;
+  }
+  if (iconInner) {
+    iconInner.className = `fa-solid ${iconClass} text-base`;
+  }
+
+  // Track the currently-open notification for the delete button
+  activeNotificationId = notifId || null;
+  const actionsDiv = document.getElementById("notif-detail-actions");
+  if (actionsDiv) {
+    actionsDiv.innerHTML = `<button type="button" onclick="window.deleteNotification('${notifId}')" class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 border border-red-200 transition-colors shadow-sm"><i class="fa-solid fa-trash-can text-xs"></i><span>Delete Notification</span></button>`;
+  }
   overlay.classList.remove("hidden");
   document.body.style.overflow = "hidden";
 };
@@ -1707,6 +1726,31 @@ window.closeNotificationDetail = function () {
     modal.classList.add("hidden");
     document.body.style.overflow = "";
   }
+  activeNotificationId = null;
+};
+
+// ===== DELETE SINGLE NOTIFICATION =====
+window.deleteNotification = function (notifId) {
+  if (!loggedInUser?.id) {
+    window.showAlert("Error", "Please login first.", "error");
+    return;
+  }
+  if (!notifId) return;
+  if (pendingDeleteIds.has(notifId)) return;
+  window.showConfirmPopup("Delete Notification?", "This notification will be permanently removed.", async () => {
+    if (pendingDeleteIds.has(notifId)) return;
+    pendingDeleteIds.add(notifId);
+    try {
+      await deleteDoc(doc(db, "notifications", notifId));
+      if (activeNotificationId === notifId) window.closeNotificationDetail();
+      window.showAlert("Deleted", "Notification removed.", "success");
+    } catch (err) {
+      console.error("deleteNotification failed:", err);
+      window.showAlert("Error", "Could not delete this notification. Please try again.", "error");
+    } finally {
+      pendingDeleteIds.delete(notifId);
+    }
+  });
 };
 
 // ===== CLEAR ALL NOTIFICATIONS =====
@@ -4221,7 +4265,9 @@ function renderNotificationDropdown() {
       timeDisplay = notif.createdAt
         ? formatRelativeTime(notif.createdAt)
         : "Just now";
-    html += `<div onclick="window.handleNotificationClick('${notif.id}','${notif.type || "default"}')" class="p-4 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${isUnread ? "bg-blue-50/30 hover:bg-blue-50/50" : "hover:bg-gray-50"} border-b border-gray-100 last:border-b-0 group"><div class="flex items-start space-x-3"><div class="w-10 h-10 ${iconBg} rounded-full flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform"><i class="fa-solid ${icon} text-sm"></i></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-2"><p class="text-sm font-semibold text-gray-800 truncate group-hover:text-tsu-blue transition-colors">${notif.title || "Notification"}</p>${isUnread ? '<div class="w-2.5 h-2.5 bg-blue-500 rounded-full shrink-0 animate-pulse"></div>' : ""}</div><p class="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">${notif.message || ""}</p><div class="flex items-center justify-between mt-2"><p class="text-[10px] text-gray-400 flex items-center"><i class="fa-solid fa-clock mr-1"></i>${timeDisplay}</p><span class="text-[10px] text-tsu-blue font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center">Tap to view <i class="fa-solid fa-arrow-right ml-0.5 text-[9px]"></i></span></div></div></div></div>`;
+    const safeTitle = escapeAnnouncementHtml(notif.title || "Notification");
+    const safeMessage = escapeAnnouncementHtml(notif.message || "");
+    html += `<div onclick="window.handleNotificationClick('${notif.id}','${notif.type || "default"}')" class="p-4 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${isUnread ? "bg-blue-50/30 hover:bg-blue-50/50" : "hover:bg-gray-50"} border-b border-gray-100 last:border-b-0 group"><div class="flex items-start space-x-3"><div class="w-10 h-10 ${iconBg} rounded-full flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform"><i class="fa-solid ${icon} text-sm"></i></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-2"><p class="text-sm font-semibold text-gray-800 truncate group-hover:text-tsu-blue transition-colors">${safeTitle}</p>${isUnread ? '<div class="w-2.5 h-2.5 bg-blue-500 rounded-full shrink-0 animate-pulse"></div>' : ""}</div><p class="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">${safeMessage}</p><div class="flex items-center justify-between mt-2"><p class="text-[10px] text-gray-400 flex items-center"><i class="fa-solid fa-clock mr-1"></i>${timeDisplay}</p><span class="text-[10px] text-tsu-blue font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center">Tap to view <i class="fa-solid fa-arrow-right ml-0.5 text-[9px]"></i></span></div></div><button type="button" onclick="event.stopPropagation(); event.preventDefault(); window.deleteNotification('${notif.id}')" class="self-center ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100 shrink-0" aria-label="Delete notification" title="Delete notification"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>`;
   });
   container.innerHTML = html;
 }
@@ -4443,7 +4489,9 @@ function renderMobileNotificationDropdown() {
       timeDisplay = notif.createdAt
         ? formatRelativeTime(notif.createdAt)
         : "Just now";
-    html += `<div onclick="window.handleNotificationClick('${notif.id}','${notif.type || "default"}'); closeMobileNotificationDropdown();" class="p-4 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${isUnread ? "bg-blue-50/30" : "hover:bg-gray-50"} border-b border-gray-100"><div class="flex items-start space-x-3"><div class="w-9 h-9 ${iconBg} rounded-full flex items-center justify-center shrink-0 shadow-sm"><i class="fa-solid ${icon} text-xs"></i></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-2"><p class="text-xs font-semibold text-gray-800 truncate">${notif.title || "Notification"}</p>${isUnread ? '<div class="w-2 h-2 bg-blue-500 rounded-full shrink-0"></div>' : ""}</div><p class="text-[11px] text-gray-600 mt-0.5 line-clamp-2">${notif.message || ""}</p><p class="text-[9px] text-gray-400 mt-1.5"><i class="fa-solid fa-clock mr-1"></i>${timeDisplay}</p></div></div></div>`;
+    const safeTitle = escapeAnnouncementHtml(notif.title || "Notification");
+    const safeMessage = escapeAnnouncementHtml(notif.message || "");
+    html += `<div onclick="window.handleNotificationClick('${notif.id}','${notif.type || "default"}'); closeMobileNotificationDropdown();" class="p-4 hover:bg-gray-100 cursor-pointer transition-all duration-200 ${isUnread ? "bg-blue-50/30" : "hover:bg-gray-50"} border-b border-gray-100"><div class="flex items-start space-x-3"><div class="w-9 h-9 ${iconBg} rounded-full flex items-center justify-center shrink-0 shadow-sm"><i class="fa-solid ${icon} text-xs"></i></div><div class="flex-1 min-w-0"><div class="flex items-center justify-between gap-2"><p class="text-xs font-semibold text-gray-800 truncate">${safeTitle}</p>${isUnread ? '<div class="w-2 h-2 bg-blue-500 rounded-full shrink-0"></div>' : ""}</div><p class="text-[11px] text-gray-600 mt-0.5 line-clamp-2">${safeMessage}</p><p class="text-[9px] text-gray-400 mt-1.5"><i class="fa-solid fa-clock mr-1"></i>${timeDisplay}</p></div><button type="button" onclick="event.stopPropagation(); event.preventDefault(); window.deleteNotification('${notif.id}')" class="self-center ml-1 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors shrink-0" aria-label="Delete notification" title="Delete notification"><i class="fa-solid fa-trash-can text-xs"></i></button></div></div>`;
   });
   container.innerHTML = html;
 }
@@ -4492,6 +4540,13 @@ function disableAllProfileFields() {
   if (tb) {
     tb.disabled = true;
     tb.classList.add("opacity-60", "cursor-not-allowed");
+    tb.setAttribute("aria-pressed", "false");
+    tb.setAttribute("aria-label", "Show password");
+  }
+  const ic = document.getElementById("prof-password-icon");
+  if (ic) {
+    ic.classList.remove("fa-eye-slash");
+    ic.classList.add("fa-eye");
   }
   const fi = document.getElementById("profile-pic-input");
   if (fi) fi.disabled = true;
@@ -4586,7 +4641,18 @@ window.cancelEdit = function () {
     }
     hideLoading();
     window.showAlert("Cancelled", "Changes discarded.", "success");
-    document.getElementById("prof-password").type = "password";
+    const profPw = document.getElementById("prof-password");
+    if (profPw) profPw.type = "password";
+    const profIcon = document.getElementById("prof-password-icon");
+    if (profIcon) {
+      profIcon.classList.remove("fa-eye-slash");
+      profIcon.classList.add("fa-eye");
+    }
+    const profBtn = document.getElementById("toggle-prof-password");
+    if (profBtn) {
+      profBtn.setAttribute("aria-pressed", "false");
+      profBtn.setAttribute("aria-label", "Show password");
+    }
   }, 400);
 };
 
@@ -4907,26 +4973,27 @@ if (profileForm) {
 }
 
 // ===== PASSWORD TOGGLE & CONFIRM BUTTONS =====
-document
-  .getElementById("toggle-prof-password")
-  ?.addEventListener("click", function () {
-    const pf = document.getElementById("prof-password"),
-      ic = document.getElementById("prof-password-icon");
-    if (!pf) return;
-    if (pf.type === "password") {
-      pf.type = "text";
-      if (ic) {
-        ic.classList.remove("fa-eye");
-        ic.classList.add("fa-eye-slash");
-      }
+window.toggleProfPassword = function () {
+  const pf = document.getElementById("prof-password"),
+    ic = document.getElementById("prof-password-icon"),
+    btn = document.getElementById("toggle-prof-password");
+  if (!pf) return;
+  const isPass = pf.type === "password";
+  pf.type = isPass ? "text" : "password";
+  if (ic) {
+    if (isPass) {
+      ic.classList.remove("fa-eye");
+      ic.classList.add("fa-eye-slash");
     } else {
-      pf.type = "password";
-      if (ic) {
-        ic.classList.remove("fa-eye-slash");
-        ic.classList.add("fa-eye");
-      }
+      ic.classList.remove("fa-eye-slash");
+      ic.classList.add("fa-eye");
     }
-  });
+  }
+  if (btn) {
+    btn.setAttribute("aria-pressed", isPass ? "true" : "false");
+    btn.setAttribute("aria-label", isPass ? "Hide password" : "Show password");
+  }
+};
 
 document.getElementById("confirm-cancel-btn")?.addEventListener("click", () => {
   document.getElementById("confirm-modal")?.classList.add("hidden");
@@ -8721,6 +8788,7 @@ window.closeMobileMenu = closeMobileMenu;
 window.openNotificationDetail = window.openNotificationDetail;
 window.closeNotificationDetail = window.closeNotificationDetail;
 window.clearAllNotifications = window.clearAllNotifications;
+window.deleteNotification = window.deleteNotification;
 window.joinEvent = window.confirmJoinEvent;
 window.confirmJoinEvent = window.confirmJoinEvent;
 window.performJoinEvent = performJoinEvent;
@@ -8758,3 +8826,4 @@ window.handleResendVerification = window.handleResendVerification;
 window.closeResendVerificationModal = window.closeResendVerificationModal;
 window.switchDonationType = window.switchDonationType;
 window.setDonationAmount = window.setDonationAmount;
+window.toggleProfPassword = window.toggleProfPassword;
